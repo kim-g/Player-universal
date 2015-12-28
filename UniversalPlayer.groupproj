@@ -15,6 +15,9 @@
         <Projects Include="branch_standalone\branch_standalone.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="ImagesDLL\images.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="branch_standalone:Make">
         <MSBuild Projects="branch_standalone\branch_standalone.dproj" Targets="Make"/>
     </Target>
+    <Target Name="images">
+        <MSBuild Projects="ImagesDLL\images.dproj"/>
+    </Target>
+    <Target Name="images:Clean">
+        <MSBuild Projects="ImagesDLL\images.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="images:Make">
+        <MSBuild Projects="ImagesDLL\images.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="STD_Player;PlayListManager;branch_portal;branch_standalone"/>
+        <CallTarget Targets="STD_Player;PlayListManager;branch_portal;branch_standalone;images"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="STD_Player:Clean;PlayListManager:Clean;branch_portal:Clean;branch_standalone:Clean"/>
+        <CallTarget Targets="STD_Player:Clean;PlayListManager:Clean;branch_portal:Clean;branch_standalone:Clean;images:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="STD_Player:Make;PlayListManager:Make;branch_portal:Make;branch_standalone:Make"/>
+        <CallTarget Targets="STD_Player:Make;PlayListManager:Make;branch_portal:Make;branch_standalone:Make;images:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -83,6 +83,7 @@ type
     Track2: TPanel;
     Track_Image1: TImage;
     Track_Image2: TImage;
+    Image3: TImage;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
       var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);
@@ -132,6 +133,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure Track_Image1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure Image3Click(Sender: TObject);
   private
     MouseDown: boolean;
 
@@ -541,6 +543,28 @@ case LowKey[1] of
 'o','щ': ListUp(2);                       //¬верх по списку
 ',','б': ListDown(2);                     //¬низ по списку
 end;
+end;
+
+procedure TForm1.Image3Click(Sender: TObject);
+var
+  Lib: THandle;
+  PNG:TBitMap;
+begin
+Lib:= LoadLibrary('images.dll');
+
+if Lib <= 32 then
+  begin
+  ShowMessage('ќшибка images.dll');
+  Application.Terminate;
+  end;
+
+PNG := TBitMap.Create;
+PNG.Handle := LoadBitmap(HInstance, 'Del');
+
+Image3.Picture.Assign(PNG);
+
+PNG.Free;
+FreeLibrary(Lib);
 end;
 
 procedure TForm1.Label7DblClick(Sender: TObject);
