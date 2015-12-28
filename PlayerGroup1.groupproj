@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{44819F36-BA87-4B5D-820F-EC27EF337957}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="STD_Player.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="AddUser.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="PlayListManager.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="STD_Player">
+        <MSBuild Projects="STD_Player.dproj"/>
+    </Target>
+    <Target Name="STD_Player:Clean">
+        <MSBuild Projects="STD_Player.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="STD_Player:Make">
+        <MSBuild Projects="STD_Player.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="AddUser">
+        <MSBuild Projects="AddUser.dproj"/>
+    </Target>
+    <Target Name="AddUser:Clean">
+        <MSBuild Projects="AddUser.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AddUser:Make">
+        <MSBuild Projects="AddUser.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PlayListManager">
+        <MSBuild Projects="PlayListManager.dproj"/>
+    </Target>
+    <Target Name="PlayListManager:Clean">
+        <MSBuild Projects="PlayListManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PlayListManager:Make">
+        <MSBuild Projects="PlayListManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="STD_Player;AddUser;PlayListManager"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="STD_Player:Clean;AddUser:Clean;PlayListManager:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="STD_Player:Make;AddUser:Make;PlayListManager:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1,0 +1,6 @@
+Pause_off RCDATA "Images\\Pause_off.png"
+Pause_on RCDATA "Images\\Pause_on.png"
+Play_off RCDATA "Images\\Play_off.png"
+Play_on RCDATA "Images\\Play_on.png"
+Stop_off RCDATA "Images\\Stop_off.png"
+Stop_on RCDATA "Images\\Stop_on.png"
