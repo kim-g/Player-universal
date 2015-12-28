@@ -147,7 +147,10 @@ type
 function ExeDir:string;
 function AppData:string;
 
-
+// Импортирование из functions.dll
+procedure ShutDownPlayer(Width, Height: Integer); stdcall; external 'functions.dll';
+function ConfigAddress:string; stdcall; external 'functions.dll';
+function MusicAddress(FP:string):string; stdcall; external 'functions.dll';
 
 var
   Form1: TForm1;
@@ -203,7 +206,7 @@ end;
 
 procedure TForm1.BitBtn2Click(Sender: TObject);
 begin                                                                          // Выключим компьютер
-Application.Terminate;
+ShutDownPlayer(DefWidth, DefHeight);
 end;
 
 procedure TForm1.BitBtn3Click(Sender: TObject);
@@ -486,7 +489,7 @@ SEList[2].SE2:=SpinEdit4;
 DeskPanel[1]:=Panel7;
 DeskPanel[2]:=Panel8;
 
-Config:=TINIFile.Create(ExtractFilePath(Application.ExeName)+'config.ini');   //В Portable версии
+Config:=TINIFile.Create(ConfigAddress);
 if FileExists(Config.ReadString('start options','file','ERROR')) then LoadSPL(Config.ReadString('start options','file','ERROR'))
  else
    begin
@@ -832,7 +835,7 @@ begin
 
 BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
 
-Filename:=ExtractFilePath(Application.ExeName) + 'Music\' +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
+Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
   FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');
 
 //пытаемся загрузить файл и получить дескриптор канала

@@ -6,10 +6,13 @@
         <Projects Include="STD_Player.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="AddUser.dproj">
+        <Projects Include="PlayListManager.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="PlayListManager.dproj">
+        <Projects Include="branch_portal\branch_portal.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="branch_standalone\branch_standalone.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -29,15 +32,6 @@
     <Target Name="STD_Player:Make">
         <MSBuild Projects="STD_Player.dproj" Targets="Make"/>
     </Target>
-    <Target Name="AddUser">
-        <MSBuild Projects="AddUser.dproj"/>
-    </Target>
-    <Target Name="AddUser:Clean">
-        <MSBuild Projects="AddUser.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="AddUser:Make">
-        <MSBuild Projects="AddUser.dproj" Targets="Make"/>
-    </Target>
     <Target Name="PlayListManager">
         <MSBuild Projects="PlayListManager.dproj"/>
     </Target>
@@ -47,14 +41,32 @@
     <Target Name="PlayListManager:Make">
         <MSBuild Projects="PlayListManager.dproj" Targets="Make"/>
     </Target>
+    <Target Name="branch_portal">
+        <MSBuild Projects="branch_portal\branch_portal.dproj"/>
+    </Target>
+    <Target Name="branch_portal:Clean">
+        <MSBuild Projects="branch_portal\branch_portal.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="branch_portal:Make">
+        <MSBuild Projects="branch_portal\branch_portal.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="branch_standalone">
+        <MSBuild Projects="branch_standalone\branch_standalone.dproj"/>
+    </Target>
+    <Target Name="branch_standalone:Clean">
+        <MSBuild Projects="branch_standalone\branch_standalone.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="branch_standalone:Make">
+        <MSBuild Projects="branch_standalone\branch_standalone.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="STD_Player;AddUser;PlayListManager"/>
+        <CallTarget Targets="STD_Player;PlayListManager;branch_portal;branch_standalone"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="STD_Player:Clean;AddUser:Clean;PlayListManager:Clean"/>
+        <CallTarget Targets="STD_Player:Clean;PlayListManager:Clean;branch_portal:Clean;branch_standalone:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="STD_Player:Make;AddUser:Make;PlayListManager:Make"/>
+        <CallTarget Targets="STD_Player:Make;PlayListManager:Make;branch_portal:Make;branch_standalone:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

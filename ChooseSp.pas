@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, INIFiles;
 
 type
   TChooseSpForm = class(TForm)
@@ -28,6 +28,8 @@ type
   public
     function ChSp(Old:string):string;
   end;
+
+function ListAddress(INI:TINIFile):string; stdcall;  external 'functions.dll';
 
 var
   ChooseSpForm: TChooseSpForm;
@@ -58,7 +60,7 @@ var
 begin
 ListBox1.Clear;
 
-if FindFirst(ExtractFilePath(Application.ExeName) + 'ListDir\*.spl',faNormal,tsr) = 0 then
+if FindFirst(ListAddress(Config) + '*.spl',faNormal,tsr) = 0 then
   repeat
     fn:=tsr.name;
     ListBox1.Items.Add(fn.Remove(fn.Length-4));
@@ -69,7 +71,7 @@ ShowModal;
 
 if ListBox1.ItemIndex=-1
   then ChSp:='none'
-  else ChSp:=ExtractFilePath(Application.ExeName) + 'ListDir\'+ListBox1.Items[ListBox1.ItemIndex]+'.spl';
+  else ChSp:=ListAddress(Config)+ListBox1.Items[ListBox1.ItemIndex]+'.spl';
 end;
 
 procedure TChooseSpForm.ListBox1DblClick(Sender: TObject);

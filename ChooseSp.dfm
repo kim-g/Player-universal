@@ -34,7 +34,6 @@ object ChooseSpForm: TChooseSpForm
     OnMouseDown = Panel1MouseDown
     OnMouseMove = Panel1MouseMove
     OnMouseUp = Panel1MouseUp
-    ExplicitWidth = 635
   end
   object Panel2: TPanel
     Left = 0
@@ -46,9 +45,6 @@ object ChooseSpForm: TChooseSpForm
     BorderWidth = 10
     Caption = 'Panel2'
     TabOrder = 1
-    ExplicitTop = 39
-    ExplicitWidth = 635
-    ExplicitHeight = 366
     object ListBox1: TListBox
       Left = 12
       Top = 12
@@ -67,8 +63,6 @@ object ChooseSpForm: TChooseSpForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 328
-      ExplicitWidth = 611
       object Button1: TButton
         Left = 152
         Top = 14
