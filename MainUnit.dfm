@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 0
-  Top = 0
+  Left = 480
+  Top = 154
   Align = alClient
   BorderStyle = bsNone
   Caption = #1055#1083#1077#1077#1088' '#1076#1083#1103' '#1090#1077#1072#1090#1088#1072' '#171#1057#1090#1072#1088#1099#1081' '#1044#1086#1084#187
@@ -14,7 +14,7 @@ object Form1: TForm1
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poScreenCenter
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress

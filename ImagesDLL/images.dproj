@@ -5,7 +5,7 @@
         <FrameworkType>None</FrameworkType>
         <MainSource>images.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Library</AppType>
@@ -99,17 +99,21 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <RcItem Include="..\Win32\Release\Images\Pause_on.png">
+        <RcItem Include="Images\Pause_on.png">
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>PngImage_1</ResourceId>
+            <ResourceId>Pause</ResourceId>
         </RcItem>
-        <RcItem Include="..\Win32\Release\Images\Play_on.png">
+        <RcItem Include="Images\Play_on.png">
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>PngImage_2</ResourceId>
+            <ResourceId>Play</ResourceId>
         </RcItem>
-        <RcItem Include="..\Win32\Release\Images\Stop_on.png">
+        <RcItem Include="Images\Stop_on.png">
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>PngImage_3</ResourceId>
+            <ResourceId>Stop</ResourceId>
+        </RcItem>
+        <RcItem Include="..\Images\Delete.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>Del</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

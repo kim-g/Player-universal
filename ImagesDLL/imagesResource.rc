@@ -1,4 +1,4 @@
 Pause RCDATA "Images\\Pause_on.png"
 Play RCDATA "Images\\Play_on.png"
 Stop RCDATA "Images\\Stop_on.png"
-Bitmap_1 BITMAP "..\\Images\\Delete.bmp"
+Del BITMAP "..\\Images\\Delete.bmp"

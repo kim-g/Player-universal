@@ -548,7 +548,8 @@ end;
 procedure TForm1.Image3Click(Sender: TObject);
 var
   Lib: THandle;
-  PNG:TBitMap;
+  PNG:TPNGImage;
+  BMP:TBitMap;
 begin
 Lib:= LoadLibrary('images.dll');
 
@@ -558,10 +559,12 @@ if Lib <= 32 then
   Application.Terminate;
   end;
 
-PNG := TBitMap.Create;
-PNG.Handle := LoadBitmap(HInstance, 'Del');
+{PNG := TPNGImage.Create;
+PNG.LoadFromResourceName(Lib, 'Play_on.png'); }
+BMP := TBitMap.Create;
+BMP.LoadFromResourceName(Handle, 'Delete.bmp');
 
-Image3.Picture.Assign(PNG);
+Image3.Picture.Assign(BMP);
 
 PNG.Free;
 FreeLibrary(Lib);

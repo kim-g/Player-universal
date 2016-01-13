@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.748,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.371,D:\Dropbox\Театр\Player\PlayListUnit.pas=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.691,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\PlayListManager\default.txvpck</Transaction>
     <Transaction>1899.12.30 00:00:00.000.481,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\default.txaPackage</Transaction>
     <Transaction>1899.12.30 00:00:00.000.933,=C:\Users\Подмена\Dropbox\Театр\Player\Unit3.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.468,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\PlayListManager\default.txaPackage</Transaction>
     <Transaction>1899.12.30 00:00:00.000.401,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.371,D:\Dropbox\Театр\Player\PlayListUnit.pas=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.748,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.523,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\default.txvpck</Transaction>
     <Transaction>1899.12.30 00:00:00.000.975,C:\Users\Подмена\Dropbox\Театр\Player\NTrackUnit.pas=C:\Users\Подмена\Dropbox\Театр\Player\ТекфслГтше.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.324,=C:\Users\Подмена\Dropbox\Театр\Player\FilePropUnit.pas</Transaction>
