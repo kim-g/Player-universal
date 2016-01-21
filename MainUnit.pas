@@ -133,6 +133,7 @@ type
     procedure Track_Image1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure Image3Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     MouseDown: boolean;
 
@@ -555,6 +556,11 @@ Panel3.Color:=TotalTimePColor;
 Panel6.Color:=TotalTimePColor;
 
 MouseDown := false;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+FreeLibrary(ImagesDLL);
 end;
 
 procedure TForm1.FormKeyPress(Sender: TObject; var Key: Char);
