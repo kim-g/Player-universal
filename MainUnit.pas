@@ -174,7 +174,7 @@ var
   DefFR:integer;{частота}
 
 const
-  DEBUG = true;
+  DEBUG = false;
 
   IndForColor= $0000e03f;    //÷вет индикатора уровн€
   IndBackColor=$00255b25;     //÷вет фона индикатора уровн€
@@ -524,6 +524,7 @@ SEList[2].SE2:=SpinEdit4;
 DeskPanel[1]:=Panel7;
 DeskPanel[2]:=Panel8;
 
+if DEBUG then ShowMessage('Call ConfigAddress()');
 Config:=TINIFile.Create(ConfigAddress);
 if FileExists(Config.ReadString('start options','file','ERROR')) then LoadSPL(Config.ReadString('start options','file','ERROR'))
  else
@@ -882,6 +883,7 @@ begin
 
 BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
 
+if DEBUG then ShowMessage('Call MusicAddress()');
 Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
   FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');
 

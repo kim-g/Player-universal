@@ -4,10 +4,15 @@ uses
   System.SysUtils,
   System.Classes,
   VCL.Forms,
+  VCL.Dialogs,
   WinAPI.Windows,
   INIFiles;
 
+const
+  DEBUG = false;
 
+var
+  ApplicationExeName:string='';
 
 {$R *.res}
 
@@ -27,17 +32,25 @@ end;
 
 function ConfigAddress:string; stdcall;
 begin
-  Result := ExtractFilePath(Application.ExeName)+'config.ini';
+  if Debug then ShowMessage('Called ConfigAddress()');
+  if ApplicationExeName = '' then ApplicationExeName := ExtractFilePath(Application.ExeName);
+
+
+  Result := ApplicationExeName+'config.ini';
 end;
 
 function MusicAddress(FP:string):string; stdcall;
 begin
-  Result := ExtractFilePath(Application.ExeName) + FP + '/';
+  if Debug then ShowMessage('Called MusicAddress(FP:string)');
+  if ApplicationExeName = '' then ApplicationExeName := ExtractFilePath(Application.ExeName);
+  Result := ApplicationExeName + FP + '\';
 end;
 
 function ListAddress(INI:TINIFile):string; stdcall;
 begin
-  Result := ExtractFilePath(Application.ExeName) + 'ListDir\';
+  if Debug then ShowMessage('Called ListAddress(INI:TINIFile)');
+  if ApplicationExeName = '' then ApplicationExeName := ExtractFilePath(Application.ExeName);
+  Result := ApplicationExeName + 'ListDir\';
 end;
 
 exports ShutDownPlayer, ConfigAddress, MusicAddress, ListAddress;
