@@ -121,34 +121,6 @@
             <Form>ChooseSpForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <RcItem Include="Images\Pause_off.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Pause_off</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Pause_on.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Pause_on</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Play_off.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Play_off</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Play_on.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Play_on</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Stop_off.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Stop_off</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Stop_on.png">
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>Stop_on</ResourceId>
-        </RcItem>
-        <RcItem Include="Images\Delete.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>Del</ResourceId>
-        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -2,13 +2,12 @@ library images;
 
 
 
-{$R *.dres}
-
 uses
   System.SysUtils,
   System.Classes;
 
 {$R *.res}
+{$R ImagesToAdd.RES}
 
 begin
 end.

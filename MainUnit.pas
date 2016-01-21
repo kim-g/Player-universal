@@ -83,7 +83,6 @@ type
     Track2: TPanel;
     Track_Image1: TImage;
     Track_Image2: TImage;
-    Image3: TImage;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
       var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);
@@ -158,6 +157,7 @@ var
   Form1: TForm1;
   FTP:TMemINIFile;
   Config:TINIFile;
+  ImagesDLL: THandle;
   Desk1_List,Desk2_List:TStringList;
   Desk_bass:array[1..2] of TBass;
   SEList:array[1..2]of TSEList;
@@ -244,6 +244,8 @@ var
   FullRect, FillRect, DiffRect: TRect;
   smin,ssec,Temp:string;
   bmin,bsec:Integer;
+  PicChanged:boolean;
+  PNG:TPNGImage;
 begin
 PosB:=BASS_ChannelGetPosition(Desk.Channel, 0);                      // Получить текущую позицию
 LengthB := BASS_ChannelGetLength(Desk.Channel, 0);                   // ...и общую длину
@@ -314,26 +316,50 @@ if bsec < 10 then ssec:='0'+IntToStr(bsec) else ssec:=IntToStr(bsec);
 Temp:=smin+':'+ssec;
 if Position.Caption<>Temp then Position.Caption:=Temp;
 
+PicChanged:=false;
 case Desk.mode of
        pmStop:
          Begin
-         if iiPlay.Tag<>1 then iiPlay.Picture.LoadFromFile(ExeDir+'Images\Stop_on.png');
-         DeskPanel[NDesk].Color:=StopPannel;
-         iiPlay.Tag:=1;
+         if iiPlay.Tag<>1 then
+           begin
+           PNG:=TPNGImage.Create;
+           PNG.LoadFromResourceName(ImagesDLL, 'stop');
+           PicChanged:=true;
+           DeskPanel[NDesk].Color:=StopPannel;
+           iiPlay.Tag:=1;
+           end;
          end;
        pmPlay:
          begin
-         if iiPlay.Tag<>2 then iiPlay.Picture.LoadFromFile(ExeDir+'Images\Play_on.png');
-         DeskPanel[NDesk].Color:=PlayPannel;
-         iiPlay.Tag:=2;
+         if iiPlay.Tag<>2 then
+           begin
+           PNG:=TPNGImage.Create;
+           PNG.LoadFromResourceName(ImagesDLL, 'play');
+           PicChanged:=true;
+           DeskPanel[NDesk].Color:=PlayPannel;
+           iiPlay.Tag:=2;
+           end;
          end;
        pmPaused:
          begin
-         if iiPlay.Tag<>3 then iiPlay.Picture.LoadFromFile(ExeDir+'Images\Pause_on.png');
-         DeskPanel[NDesk].Color:=PausePannel;
-         iiPlay.Tag:=3;
+         if iiPlay.Tag<>3 then
+           begin
+           PNG:=TPNGImage.Create;
+           PNG.LoadFromResourceName(ImagesDLL, 'pause');
+           PicChanged:=true;
+           DeskPanel[NDesk].Color:=PausePannel;
+           iiPlay.Tag:=3;
+           end;
          end;
-end;
+  end;
+
+if PicChanged then
+  begin
+  iiPlay.Picture.Assign(PNG);
+  PNG.Free;
+  end;
+
+
 end;
 
 procedure TForm1.DeskPickDraw(Desk: TBass; Row: TPaintBox);
@@ -450,6 +476,13 @@ var
 begin
 Eqv:=TEqv.Create(Form1);
 
+ImagesDLL:=LoadLibrary('images.dll');
+if ImagesDLL <= 32 then
+  begin
+  ShowMessage('Ошибка images.dll');
+  Application.Terminate;
+  end;
+
 Desk1_List:=TStringList.Create;
 Desk2_List:=TStringList.Create;
 
@@ -549,25 +582,11 @@ procedure TForm1.Image3Click(Sender: TObject);
 var
   Lib: THandle;
   PNG:TPNGImage;
-  BMP:TBitMap;
 begin
-Lib:= LoadLibrary('images.dll');
-
-if Lib <= 32 then
-  begin
-  ShowMessage('Ошибка images.dll');
-  Application.Terminate;
-  end;
-
-{PNG := TPNGImage.Create;
-PNG.LoadFromResourceName(Lib, 'Play_on.png'); }
-BMP := TBitMap.Create;
-BMP.LoadFromResourceName(Handle, 'Delete.bmp');
-
-Image3.Picture.Assign(BMP);
+PNG := TPNGImage.Create;
+PNG.LoadFromResourceName(ImagesDLL, 'play');
 
 PNG.Free;
-FreeLibrary(Lib);
 end;
 
 procedure TForm1.Label7DblClick(Sender: TObject);
@@ -858,6 +877,7 @@ var
   FileName:string;
   Len:DWord;
   secAll:Double;
+  PNG:TPNGImage;
 begin
 
 BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
@@ -894,7 +914,10 @@ Desk.mode:=pmstop;
 if FTP.ReadBool('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'repeat',false) then
   begin
   Desk.RepeatSound:=true;
-  RepeatImage.Picture.LoadFromFile(ExeDir+'Images\Repeat.png');
+  PNG:=TPNGImage.Create;
+  PNG.LoadFromResourceName(ImagesDLL, 'repeat');
+  RepeatImage.Picture.Assign(PNG);
+  PNG.Free;
   end
  else
   begin

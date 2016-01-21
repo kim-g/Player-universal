@@ -1,6 +1,6 @@
 program STD_Player;
 
-{$R *.dres}
+
 
 uses
   Vcl.Forms,
