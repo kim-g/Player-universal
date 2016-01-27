@@ -141,6 +141,7 @@ type
     procedure SaveSettings;
     procedure RestoreSettings;
     procedure DrawList(List: TImage; DeskN:Byte);
+    procedure ScaleComponents;
   public
     { Public declarations }
   end;
@@ -173,6 +174,9 @@ var
 
   DefWidth, DefHeight, BPP: word;{цвета, ширина, высота}
   DefFR:integer;{частота}
+
+  XScale: Single = 1;
+  YScale: integer = 1;
 
 const
   DEBUG = false;
@@ -321,35 +325,35 @@ PicChanged:=false;
 case Desk.mode of
        pmStop:
          Begin
-         if iiPlay.Tag<>1 then
+         if iiPlay.Tag<>11 then
            begin
            PNG:=TPNGImage.Create;
            PNG.LoadFromResourceName(ImagesDLL, 'stop');
            PicChanged:=true;
            DeskPanel[NDesk].Color:=StopPannel;
-           iiPlay.Tag:=1;
+           iiPlay.Tag:=11;
            end;
          end;
        pmPlay:
          begin
-         if iiPlay.Tag<>2 then
+         if iiPlay.Tag<>12 then
            begin
            PNG:=TPNGImage.Create;
            PNG.LoadFromResourceName(ImagesDLL, 'play');
            PicChanged:=true;
            DeskPanel[NDesk].Color:=PlayPannel;
-           iiPlay.Tag:=2;
+           iiPlay.Tag:=12;
            end;
          end;
        pmPaused:
          begin
-         if iiPlay.Tag<>3 then
+         if iiPlay.Tag<>13 then
            begin
            PNG:=TPNGImage.Create;
            PNG.LoadFromResourceName(ImagesDLL, 'pause');
            PicChanged:=true;
            DeskPanel[NDesk].Color:=PausePannel;
-           iiPlay.Tag:=3;
+           iiPlay.Tag:=13;
            end;
          end;
   end;
@@ -402,7 +406,7 @@ var
   I: Integer;
 begin
 List.Canvas.Font.Name:='Courier New';
-List.Canvas.Font.Size:=16;
+List.Canvas.Font.Size:=round(16 * XScale);
 List.Canvas.Font.Color:=$000000;
 List.Canvas.Brush.Color:=$FFFFFF;
 List.Canvas.Pen.Color:=$FFFFFF;
@@ -420,10 +424,15 @@ for I := -8 to 8 do
     List.Canvas.Pen.Color:=$000000;
     List.Canvas.Font.Color:=$FFFFFF;
     List.Canvas.Brush.Style:= bsSolid;
-    List.Canvas.Rectangle(2,168+I*21,463,168+(I+1)*21);
+    List.Canvas.Rectangle(round(2*XScale),
+                          round(168*XScale+I*21*XScale),
+                          round(463*XScale),
+                          round(168*XScale+(I+1)*21*XScale));
     List.Canvas.Brush.Style:= bsClear;
 
-    List.Canvas.TextOut(5, 168+I*21, ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
+    List.Canvas.TextOut(round(5*XScale),
+                        round(168*XScale+I*21*XScale),
+                        ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
 
     List.Canvas.Brush.Color:=$FFFFFF;
     List.Canvas.Pen.Color:=$FFFFFF;
@@ -438,10 +447,15 @@ for I := -8 to 8 do
     List.Canvas.Pen.Color:=$000000;
     List.Canvas.Font.Color:=$000000;
     List.Canvas.Brush.Style:= bsSolid;
-    List.Canvas.Rectangle(2,168+I*21,463,168+(I+1)*21);
+    List.Canvas.Rectangle(round(2*XScale),
+                          round(168*XScale+I*21*XScale),
+                          round(463*XScale),
+                          round(168*XScale+(I+1)*21*XScale));
     List.Canvas.Brush.Style:= bsClear;
 
-    List.Canvas.TextOut(5, 168+I*21, ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
+    List.Canvas.TextOut(round(5*XScale),
+                        round(168*XScale+I*21*XScale),
+                        ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
 
     List.Canvas.Brush.Color:=$FFFFFF;
     List.Canvas.Pen.Color:=$FFFFFF;
@@ -450,7 +464,9 @@ for I := -8 to 8 do
     Continue;
     end;
 
-  List.Canvas.TextOut(5, 168+I*21, ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
+  List.Canvas.TextOut(round(5*XScale),
+                        round(168*XScale+I*21*XScale),
+                        ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
   end;
 List.Canvas.Pen.Color:=$000000;
 List.Canvas.MoveTo(0,0);
@@ -527,6 +543,13 @@ DeskPanel[2]:=Panel8;
 
 if DEBUG then ShowMessage('Call ConfigAddress()');
 Config:=TINIFile.Create(ConfigAddress);
+if Config.ReadBool('debug','SetResulution',false) then
+  begin
+  SaveSettings;
+  SetScreen(Config.ReadInteger('debug','width',1024),
+            Config.ReadInteger('debug','height',768));
+  end;
+ScaleComponents;
 if FileExists(Config.ReadString('start options','file','ERROR')) then LoadSPL(Config.ReadString('start options','file','ERROR'))
  else
    begin
@@ -539,12 +562,7 @@ if FileExists(Config.ReadString('start options','file','ERROR')) then LoadSPL(Co
      Application.Terminate;
    end;
 
-if Config.ReadBool('debug','SetResulution',false) then
-  begin
-  SaveSettings;
-  SetScreen(Config.ReadInteger('debug','width',1024),
-            Config.ReadInteger('debug','height',768));
-  end;
+
 
 CloseB.Visible:=Config.ReadBool('debug','CloseButton',false);
 BitBtn3.Visible:=Config.ReadBool('start options','equalizer',false);
@@ -610,7 +628,7 @@ if MouseDown then exit;
 
 MouseDown := true;
 
-MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - 8 + (Y div 21);
+MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*XScale));
 
 if MousePositionNum < 0 then Exit;
 if MousePositionNum >= ListBoxItems[TComponent(Sender).Tag].Count then Exit;
@@ -657,7 +675,7 @@ var
 begin
 if not MouseDown then exit;
 
-MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - 8 + (Y div 21);
+MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*XScale));
 
 if MousePositionNum = ListBoxItemClicked[TComponent(Sender).Tag] then Exit;
 
@@ -815,6 +833,39 @@ begin
   DC := CreateDC('DISPLAY', nil, nil, nil);
   BPP := GetDeviceCaps(DC, BITSPIXEL);
   DefFR:=GetDeviceCaps(DC, VREFRESH);
+end;
+
+procedure TForm1.ScaleComponents;
+var
+  i:integer;
+  Component:TControl;
+begin
+XScale := Screen.Height / 768;
+YScale := round((Screen.Width -  XScale * 1024) / 2);
+
+for i:=0 to ComponentCount-1 do
+  begin
+    if not (Components[i] is TControl) then Continue;
+    Component := TControl(Components[i]);
+    Component.Left := Round(Component.Left * XScale);
+    if Component.Tag<10 then Component.Left := Component.Left + YScale;
+
+    Component.Width := Round(Component.Width * XScale);
+    Component.Top := Round(Component.Top * XScale);
+    Component.Height := Round(Component.Height * XScale);
+    if (Components[i] is TButton)
+      then  TButton(Components[i]).Font.Size := round(TButton(Components[i]).Font.Size * XScale);
+    if (Components[i] is TBitBtn)
+      then  TBitBtn(Components[i]).Font.Size := round(TBitBtn(Components[i]).Font.Size * XScale);
+    if (Components[i] is TLabel)
+      then  TLabel(Components[i]).Font.Size := round(TLabel(Components[i]).Font.Size * XScale);
+    if (Components[i] is TImage) then
+      begin
+      TImage(Components[i]).Picture.Bitmap.Height := TImage(Components[i]).Height;
+      TImage(Components[i]).Picture.Bitmap.Width := TImage(Components[i]).Width;
+      end;
+
+  end;
 end;
 
 procedure TForm1.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;

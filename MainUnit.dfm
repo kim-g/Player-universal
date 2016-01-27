@@ -771,6 +771,7 @@ object Form1: TForm1
     ParentBackground = False
     TabOrder = 3
     object Image4: TImage
+      Tag = 10
       Left = 104
       Top = 0
       Width = 33
@@ -778,6 +779,7 @@ object Form1: TForm1
       Center = True
     end
     object Image5: TImage
+      Tag = 10
       Left = 392
       Top = 0
       Width = 41
@@ -785,6 +787,7 @@ object Form1: TForm1
       Center = True
     end
     object Label2: TLabel
+      Tag = 10
       Left = 14
       Top = 8
       Width = 57
@@ -832,6 +835,7 @@ object Form1: TForm1
       ExplicitHeight = 79
     end
     object CloseB: TSpeedButton
+      Tag = 10
       Left = 985
       Top = 0
       Width = 23
@@ -857,10 +861,11 @@ object Form1: TForm1
     ParentBackground = False
     TabOrder = 11
     object Image1: TImage
+      Tag = 10
       Left = 98
-      Top = 0
+      Top = -1
       Width = 33
-      Height = 43
+      Height = 44
       Center = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000210000
@@ -870,7 +875,7 @@ object Form1: TForm1
         76FB0082F11CCE14F0CE0F0000000049454E44AE426082}
     end
     object Image2: TImage
-      Tag = 3
+      Tag = 10
       Left = 400
       Top = -1
       Width = 41
@@ -878,6 +883,7 @@ object Form1: TForm1
       Center = True
     end
     object Label1: TLabel
+      Tag = 10
       Left = 12
       Top = 8
       Width = 57

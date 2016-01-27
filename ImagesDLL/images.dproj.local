@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.634,=D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Pause_on.png</Transaction>
     <Transaction>1899.12.30 00:00:00.000.662,=D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Play_on.png</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.224,C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj=D:\Яндекс диск\Театр\Player\Player Universal\ImagesDLL\images.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.901,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Pause_on.png=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.224,D:\Яндекс диск\Театр\Player\Player Universal\ImagesDLL\images.dproj=C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.320,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Play_on.png=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.832,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Stop_on.png=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.690,=D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Stop_on.png</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.634,=D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Pause_on.png</Transaction>
     <Transaction>1899.12.30 00:00:00.000.727,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2016.01.21 20:08:05.901,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Pause_on.png=</Transaction>
-    <Transaction>2016.01.21 20:08:08.320,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Play_on.png=</Transaction>
-    <Transaction>2016.01.21 20:08:10.832,D:\Яндекс диск\Театр\Player\Player Universal\Win32\Release\Images\Stop_on.png=</Transaction>
   </Transactions>
 </BorlandProject>
