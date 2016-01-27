@@ -85,6 +85,7 @@ type
     Track_Image2: TImage;
     Black_Left: TShape;
     Black_Right: TShape;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
       var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);
@@ -173,6 +174,7 @@ var
   ListBox:array [1..2] of TImage;
   Track_Clicked: array [1..2] of Boolean = ( false, false );
   Track_Mouse_pos: array [1..2] of Integer;
+  Track_Pos: array [1..2] of Integer = (-1, -1);
 
   DefWidth, DefHeight, BPP: word;{цвета, ширина, высота}
   DefFR:integer;{частота}
@@ -287,15 +289,19 @@ if Track_Clicked[NDesk] then
     DiffRect.Right := Track_Mouse_pos[NDesk];
     end;
 
-  Track_Image.Canvas.Pen.Color := IndBackColor;
-  Track_Image.Canvas.Brush.Color := IndBackColor;
-  Track_Image.Canvas.FillRect(FullRect);
-  Track_Image.Canvas.Pen.Color := IndForColor;
-  Track_Image.Canvas.Brush.Color := IndForColor;
-  Track_Image.Canvas.FillRect(FillRect);
-  Track_Image.Canvas.Pen.Color := IndMidColor;
-  Track_Image.Canvas.Brush.Color := IndMidColor;
-  Track_Image.Canvas.FillRect(DiffRect);
+  if (Track_Pos[NDesk] <> T_Position) then
+    begin
+    Track_Image.Canvas.Pen.Color := IndBackColor;
+    Track_Image.Canvas.Brush.Color := IndBackColor;
+    Track_Image.Canvas.FillRect(FullRect);
+    Track_Image.Canvas.Pen.Color := IndForColor;
+    Track_Image.Canvas.Brush.Color := IndForColor;
+    Track_Image.Canvas.FillRect(FillRect);
+    Track_Image.Canvas.Pen.Color := IndMidColor;
+    Track_Image.Canvas.Brush.Color := IndMidColor;
+    Track_Image.Canvas.FillRect(DiffRect);
+    Track_Pos[NDesk] := T_Position;
+    end;
   end
  else
   begin
@@ -307,12 +313,16 @@ if Track_Clicked[NDesk] then
   FillRect.Top := 0;
   FillRect.Right := round( Track_Panel.Width * PosB / LengthB );
   FillRect.Bottom := Track_Image.Height;
-  Track_Image.Canvas.Brush.Color := IndBackColor;
-  Track_Image.Canvas.Pen.Color := IndBackColor;
-  Track_Image.Canvas.FillRect(FullRect);
-  Track_Image.Canvas.Brush.Color := IndForColor;
-  Track_Image.Canvas.Pen.Color := $000000;
-  Track_Image.Canvas.FillRect(FillRect);
+  if (Track_Pos[NDesk] <> round( Track_Panel.Width * PosB / LengthB )) then
+    begin
+    Track_Image.Canvas.Brush.Color := IndBackColor;
+    Track_Image.Canvas.Pen.Color := IndBackColor;
+    Track_Image.Canvas.FillRect(FullRect);
+    Track_Image.Canvas.Brush.Color := IndForColor;
+    Track_Image.Canvas.Pen.Color := $000000;
+    Track_Image.Canvas.FillRect(FillRect);
+    Track_Pos[NDesk] := round( Track_Panel.Width * PosB / LengthB );
+    end;
   end;
 
 Pos:=BASS_ChannelBytes2Seconds(Desk.Channel, PosB);
@@ -1073,6 +1083,8 @@ var
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
 begin
+Track_Pos[TComponent(Sender).Tag] := -1;
+
 Track_Clicked[TComponent(Sender).Tag] := true;
 Track_Mouse_pos[TComponent(Sender).Tag] := X;
 
@@ -1124,6 +1136,8 @@ var
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
 begin
+Track_Pos[TComponent(Sender).Tag] := -1;
+
 if not Track_Clicked[TComponent(Sender).Tag] then Exit;
 
 Track_Mouse_pos[TComponent(Sender).Tag] := X;
@@ -1174,6 +1188,8 @@ procedure TForm1.Track_Image1MouseUp(Sender: TObject; Button: TMouseButton;
 var
   B_Position, B_Length: DWord;
 begin
+Track_Pos[TComponent(Sender).Tag] := -1;
+
 B_Length := Bass_ChannelGetLength(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
 B_Position := round(B_Length * X / TImage(Sender).Width);
 

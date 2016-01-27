@@ -776,6 +776,13 @@ object Form1: TForm1
     Height = 17
     Brush.Color = clBlack
   end
+  object Label3: TLabel
+    Left = 422
+    Top = 293
+    Width = 31
+    Height = 13
+    Caption = 'Label3'
+  end
   object Panel8: TPanel
     Left = 544
     Top = 87
