@@ -762,6 +762,20 @@ object Form1: TForm1
     OnMouseMove = ListBox1MouseMove
     OnMouseUp = ListBox1MouseUp
   end
+  object Black_Left: TShape
+    Left = 472
+    Top = 312
+    Width = 25
+    Height = 17
+    Brush.Color = clBlack
+  end
+  object Black_Right: TShape
+    Left = 520
+    Top = 316
+    Width = 25
+    Height = 17
+    Brush.Color = clBlack
+  end
   object Panel8: TPanel
     Left = 544
     Top = 87

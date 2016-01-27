@@ -83,6 +83,8 @@ type
     Track2: TPanel;
     Track_Image1: TImage;
     Track_Image2: TImage;
+    Black_Left: TShape;
+    Black_Right: TShape;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
       var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);
@@ -864,8 +866,17 @@ for i:=0 to ComponentCount-1 do
       TImage(Components[i]).Picture.Bitmap.Height := TImage(Components[i]).Height;
       TImage(Components[i]).Picture.Bitmap.Width := TImage(Components[i]).Width;
       end;
-
   end;
+Black_Left.Top := 0;
+Black_Left.Height := Screen.Height;
+Black_Left.Left :=0;
+Black_Left.Width := YScale;
+
+Black_Right.Top := 0;
+Black_Right.Height := Screen.Height;
+Black_Right.Left := Screen.Width - YScale;
+Black_Right.Width := YScale;
+
 end;
 
 procedure TForm1.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
