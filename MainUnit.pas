@@ -85,7 +85,6 @@ type
     Track_Image2: TImage;
     Black_Left: TShape;
     Black_Right: TShape;
-    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
       var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);

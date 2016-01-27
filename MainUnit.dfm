@@ -763,25 +763,18 @@ object Form1: TForm1
     OnMouseUp = ListBox1MouseUp
   end
   object Black_Left: TShape
-    Left = 472
-    Top = 312
+    Left = 0
+    Top = 304
     Width = 25
     Height = 17
     Brush.Color = clBlack
   end
   object Black_Right: TShape
-    Left = 520
-    Top = 316
+    Left = 999
+    Top = 304
     Width = 25
     Height = 17
     Brush.Color = clBlack
-  end
-  object Label3: TLabel
-    Left = 422
-    Top = 293
-    Width = 31
-    Height = 13
-    Caption = 'Label3'
   end
   object Panel8: TPanel
     Left = 544
