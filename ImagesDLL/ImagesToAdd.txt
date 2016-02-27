@@ -1,4 +1,4 @@
-play	RCDATA	Images/Play_on.png
-pause	RCDATA	Images/Pause_on.png
-stop	RCDATA	Images/Stop_on.png
+play	RCDATA	Images/Play.png
+pause	RCDATA	Images/Pause.png
+stop	RCDATA	Images/Stop.png
 repeat	RCDATA	Images/Repeat.png

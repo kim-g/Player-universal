@@ -851,8 +851,9 @@ var
   i:integer;
   Component:TControl;
 begin
-XScale := Screen.Height / 768;
-YScale := round((Screen.Width -  XScale * 1024) / 2);
+
+XScale := Screen.WorkAreaHeight / 768;
+YScale := round((Screen.WorkAreaWidth - XScale * 1024) / 2);
 
 for i:=0 to ComponentCount-1 do
   begin
@@ -877,15 +878,14 @@ for i:=0 to ComponentCount-1 do
       end;
   end;
 Black_Left.Top := 0;
-Black_Left.Height := Screen.Height;
+Black_Left.Height := Screen.WorkAreaHeight;
 Black_Left.Left :=0;
 Black_Left.Width := YScale;
 
 Black_Right.Top := 0;
-Black_Right.Height := Screen.Height;
-Black_Right.Left := Screen.Width - YScale;
+Black_Right.Height := Screen.WorkAreaHeight;
+Black_Right.Left := Screen.WorkAreaWidth - YScale;
 Black_Right.Width := YScale;
-
 end;
 
 procedure TForm1.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
@@ -1213,7 +1213,6 @@ DeskPickDraw(Desk_Bass[2],PaintBox2);
 
 s:=FormatDateTime('hh:nn',Now);
 if TimeLabel.Caption <> s then TimeLabel.Caption := s;
-
 
 end;
 

@@ -787,18 +787,20 @@ object Form1: TForm1
     object Image4: TImage
       Tag = 10
       Left = 104
-      Top = 0
+      Top = 4
       Width = 33
-      Height = 43
+      Height = 33
       Center = True
+      Stretch = True
     end
     object Image5: TImage
       Tag = 10
       Left = 392
-      Top = 0
-      Width = 41
-      Height = 43
+      Top = 4
+      Width = 33
+      Height = 33
       Center = True
+      Stretch = True
     end
     object Label2: TLabel
       Tag = 10
@@ -876,10 +878,10 @@ object Form1: TForm1
     TabOrder = 11
     object Image1: TImage
       Tag = 10
-      Left = 98
-      Top = -1
+      Left = 90
+      Top = 4
       Width = 33
-      Height = 44
+      Height = 33
       Center = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000210000
@@ -887,14 +889,16 @@ object Form1: TForm1
         0000003F4944415478DAEDCEA11100310C0341ABC1149B06F5E03B0831D9E337
         B3693BDBE547E459724E73EFFB3FD34040404040404040404040404040402C23
         76FB0082F11CCE14F0CE0F0000000049454E44AE426082}
+      Stretch = True
     end
     object Image2: TImage
       Tag = 10
       Left = 400
-      Top = -1
-      Width = 41
-      Height = 44
+      Top = 4
+      Width = 33
+      Height = 33
       Center = True
+      Stretch = True
     end
     object Label1: TLabel
       Tag = 10

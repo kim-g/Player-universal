@@ -2,6 +2,6 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>1899.12.30 00:00:00.000.727,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.161,D:\Яндекс диск\Театр\Player\Player Universal\branch_portal\branch_portal.dproj=C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.161,C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj=D:\Яндекс диск\Театр\Player\Player Universal\branch_portal\branch_portal.dproj</Transaction>
   </Transactions>
 </BorlandProject>
