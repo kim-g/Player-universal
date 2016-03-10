@@ -178,8 +178,9 @@ var
   DefWidth, DefHeight, BPP: word;{цвета, ширина, высота}
   DefFR:integer;{частота}
 
-  XScale: Single = 1;
-  YScale: integer = 1;
+  Scale: Single = 1;
+  XPadding, YPadding: integer;
+
 
 const
   DEBUG = false;
@@ -417,7 +418,7 @@ var
   I: Integer;
 begin
 List.Canvas.Font.Name:='Courier New';
-List.Canvas.Font.Size:=round(16 * XScale);
+List.Canvas.Font.Size:=round(16 * Scale);
 List.Canvas.Font.Color:=$000000;
 List.Canvas.Brush.Color:=$FFFFFF;
 List.Canvas.Pen.Color:=$FFFFFF;
@@ -435,14 +436,14 @@ for I := -8 to 8 do
     List.Canvas.Pen.Color:=$000000;
     List.Canvas.Font.Color:=$FFFFFF;
     List.Canvas.Brush.Style:= bsSolid;
-    List.Canvas.Rectangle(round(2*XScale),
-                          round(168*XScale+I*21*XScale),
-                          round(463*XScale),
-                          round(168*XScale+(I+1)*21*XScale));
+    List.Canvas.Rectangle(round(2*Scale),
+                          round(168*Scale+I*21*Scale),
+                          round(463*Scale),
+                          round(168*Scale+(I+1)*21*Scale));
     List.Canvas.Brush.Style:= bsClear;
 
-    List.Canvas.TextOut(round(5*XScale),
-                        round(168*XScale+I*21*XScale),
+    List.Canvas.TextOut(round(5*Scale),
+                        round(168*Scale+I*21*Scale),
                         ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
 
     List.Canvas.Brush.Color:=$FFFFFF;
@@ -458,14 +459,14 @@ for I := -8 to 8 do
     List.Canvas.Pen.Color:=$000000;
     List.Canvas.Font.Color:=$000000;
     List.Canvas.Brush.Style:= bsSolid;
-    List.Canvas.Rectangle(round(2*XScale),
-                          round(168*XScale+I*21*XScale),
-                          round(463*XScale),
-                          round(168*XScale+(I+1)*21*XScale));
+    List.Canvas.Rectangle(round(2*Scale),
+                          round(168*Scale+I*21*Scale),
+                          round(463*Scale),
+                          round(168*Scale+(I+1)*21*Scale));
     List.Canvas.Brush.Style:= bsClear;
 
-    List.Canvas.TextOut(round(5*XScale),
-                        round(168*XScale+I*21*XScale),
+    List.Canvas.TextOut(round(5*Scale),
+                        round(168*Scale+I*21*Scale),
                         ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
 
     List.Canvas.Brush.Color:=$FFFFFF;
@@ -475,8 +476,8 @@ for I := -8 to 8 do
     Continue;
     end;
 
-  List.Canvas.TextOut(round(5*XScale),
-                        round(168*XScale+I*21*XScale),
+  List.Canvas.TextOut(round(5*Scale),
+                        round(168*Scale+I*21*Scale),
                         ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
   end;
 List.Canvas.Pen.Color:=$000000;
@@ -639,7 +640,7 @@ if MouseDown then exit;
 
 MouseDown := true;
 
-MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*XScale));
+MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*Scale));
 
 if MousePositionNum < 0 then Exit;
 if MousePositionNum >= ListBoxItems[TComponent(Sender).Tag].Count then Exit;
@@ -686,7 +687,7 @@ var
 begin
 if not MouseDown then exit;
 
-MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*XScale));
+MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*Scale));
 
 if MousePositionNum = ListBoxItemClicked[TComponent(Sender).Tag] then Exit;
 
@@ -851,41 +852,67 @@ var
   i:integer;
   Component:TControl;
 begin
-
-XScale := Screen.WorkAreaHeight / 768;
-YScale := round((Screen.WorkAreaWidth - XScale * 1024) / 2);
+if Screen.WorkAreaWidth / Screen.WorkAreaHeight > 1.33 then
+  begin
+  Scale := Screen.WorkAreaHeight / 768;
+  XPadding := 0;
+  YPadding := round((Screen.WorkAreaWidth - Scale * 1024) / 2);
+  end
+else
+  begin
+  Scale := Screen.WorkAreaWidth / 1024;
+  XPadding := round((Screen.WorkAreaHeight - Scale * 768) / 2);
+  YPadding := 0;
+  end;
 
 for i:=0 to ComponentCount-1 do
   begin
     if not (Components[i] is TControl) then Continue;
     Component := TControl(Components[i]);
-    Component.Left := Round(Component.Left * XScale);
-    if Component.Tag<10 then Component.Left := Component.Left + YScale;
+    Component.Left := Round(Component.Left * Scale);
+    if Component.Tag<10 then Component.Left := Component.Left + YPadding;
 
-    Component.Width := Round(Component.Width * XScale);
-    Component.Top := Round(Component.Top * XScale);
-    Component.Height := Round(Component.Height * XScale);
+    Component.Width := Round(Component.Width * Scale);
+    Component.Top := Round(Component.Top * Scale);
+    if Component.Tag<10 then Component.Top := Component.Top + XPadding;
+    Component.Height := Round(Component.Height * Scale);
     if (Components[i] is TButton)
-      then  TButton(Components[i]).Font.Size := round(TButton(Components[i]).Font.Size * XScale);
+      then  TButton(Components[i]).Font.Size := round(TButton(Components[i]).Font.Size * Scale);
     if (Components[i] is TBitBtn)
-      then  TBitBtn(Components[i]).Font.Size := round(TBitBtn(Components[i]).Font.Size * XScale);
+      then  TBitBtn(Components[i]).Font.Size := round(TBitBtn(Components[i]).Font.Size * Scale);
     if (Components[i] is TLabel)
-      then  TLabel(Components[i]).Font.Size := round(TLabel(Components[i]).Font.Size * XScale);
+      then  TLabel(Components[i]).Font.Size := round(TLabel(Components[i]).Font.Size * Scale);
     if (Components[i] is TImage) then
       begin
       TImage(Components[i]).Picture.Bitmap.Height := TImage(Components[i]).Height;
       TImage(Components[i]).Picture.Bitmap.Width := TImage(Components[i]).Width;
       end;
   end;
-Black_Left.Top := 0;
-Black_Left.Height := Screen.WorkAreaHeight;
-Black_Left.Left :=0;
-Black_Left.Width := YScale;
 
-Black_Right.Top := 0;
-Black_Right.Height := Screen.WorkAreaHeight;
-Black_Right.Left := Screen.WorkAreaWidth - YScale;
-Black_Right.Width := YScale;
+if Screen.WorkAreaWidth / Screen.WorkAreaHeight > 1.33 then
+  begin
+  Black_Left.Top := 0;
+  Black_Left.Height := Screen.WorkAreaHeight;
+  Black_Left.Left :=0;
+  Black_Left.Width := YPadding;
+
+  Black_Right.Top := 0;
+  Black_Right.Height := Screen.WorkAreaHeight;
+  Black_Right.Left := Screen.WorkAreaWidth - YPadding;
+  Black_Right.Width := YPadding;
+  end
+else
+  begin
+  Black_Left.Top := 0;
+  Black_Left.Height := XPadding;
+  Black_Left.Left :=0;
+  Black_Left.Width := Screen.WorkAreaWidth;
+
+  Black_Right.Top := Screen.WorkAreaHeight - XPadding;
+  Black_Right.Height := XPadding;
+  Black_Right.Left := 0;
+  Black_Right.Width := Screen.WorkAreaWidth;
+  end;
 end;
 
 procedure TForm1.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
