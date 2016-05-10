@@ -957,7 +957,7 @@ object Form1: TForm1
     Width = 218
     Height = 81
     BorderWidth = 3
-    Color = clGreen
+    Color = 395007
     ParentBackground = False
     TabOrder = 1
     object Label6: TLabel
@@ -1469,10 +1469,5 @@ object Form1: TForm1
     OnTimer = MusicStatusTimerTimer
     Left = 888
     Top = 88
-  end
-  object Activation: TTimer
-    OnTimer = ActivationTimer
-    Left = 912
-    Top = 320
   end
 end

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.748,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.371,C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas=D:\Dropbox\Театр\Player\PlayListUnit.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.691,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\PlayListManager\default.txvpck</Transaction>
     <Transaction>1899.12.30 00:00:00.000.325,C:\Users\Подмена\Dropbox\Театр\Player\Unit3.pas=C:\Users\Подмена\Dropbox\Театр\Player\ТекфслГтше.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.371,C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas=D:\Dropbox\Театр\Player\PlayListUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.748,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.468,=D:\Dropbox\Театр\Player\ModelSupport_PlayListManager\PlayListManager\default.txaPackage</Transaction>
     <Transaction>1899.12.30 00:00:00.000.401,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.837,C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj=D:\Dropbox\Театр\Player\PlayListManager.dproj</Transaction>

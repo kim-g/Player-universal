@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.727,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.04.28 15:06:42.899,=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.04.28 15:35:23.598,D:\Яндекс диск\Театр\Player\Player Universal\SoundCards\Main.pas=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2016.04.28 15:35:23.598,D:\Яндекс диск\Театр\Player\Player Universal\SoundCards\Main.dfm=C:\Users\Гриша\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2016.04.28 15:35:28.957,D:\Яндекс диск\Театр\Player\Player Universal\SoundCards\SoundCards.dproj=C:\Users\Гриша\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

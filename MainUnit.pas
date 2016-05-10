@@ -22,6 +22,7 @@ type
     //переменные для настройки эквалайзера
     p: BASS_DX8_PARAMEQ;
     fx: array[1..10] of integer;
+    LabelList:TStringList;
     end;
 
   TSEList = record
@@ -75,7 +76,6 @@ type
     Panel7: TPanel;
     Panel8: TPanel;
     Panel9: TPanel;
-    Activation: TTimer;
     TimeLabel: TLabel;
 	ListBox1: TImage;
     ListBox2: TImage;
@@ -87,7 +87,7 @@ type
     Black_Right: TShape;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
-      var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage:TImage);
+      var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage, TrackImage:TImage);
     procedure SetMusicDesk1;
     procedure SetMusicDesk2;
     procedure SetMusicDesk(DeskN:byte);
@@ -119,7 +119,6 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure CloseBClick(Sender: TObject);
-    procedure ActivationTimer(Sender: TObject);
 
     procedure ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -144,6 +143,9 @@ type
     procedure RestoreSettings;
     procedure DrawList(List: TImage; DeskN:Byte);
     procedure ScaleComponents;
+    procedure DrawTrack(Desk: TBass; NDesk: byte; Image: TImage; Panel: TPanel; Force: boolean = false);
+    procedure ChangePic(Desk: TBass; NDesk: Byte; Image: TImage);
+    procedure InitialiseDesks;
   public
     { Public declarations }
   end;
@@ -188,6 +190,7 @@ const
   IndForColor= $0000e03f;    //Цвет индикатора уровня
   IndBackColor=$00255b25;     //Цвет фона индикатора уровня
   IndMidColor= $00129d32;     //Цвет изменения позиции трека
+  IndLabColor= $000606FF;     //Цвет меток трека
 
   PlayPannel=$00255b25;
   PausePannel=$0000999D;
@@ -225,6 +228,54 @@ begin
 Eqv.Show;                                                                      // Показать эквалайзер (Beta)
 end;
 
+// Изменить картинку текущего статуса
+procedure TForm1.ChangePic(Desk: TBass; NDesk: Byte; Image: TImage);
+type
+  TIconInfo = record
+    Name: string;
+    Color: TColor;
+    Number: Byte;
+    end;
+
+var
+  PNG:TPNGImage;
+
+const
+  IconInfo: array [pmStop .. pmPaused] of TIconInfo = ((Name: 'stop'; Color: StopPannel; Number: 11),
+                                                       (Name: 'play'; Color: PlayPannel; Number: 12),
+                                                       (Name: 'pause';Color: PausePannel;Number: 13));
+begin
+if Image.Tag <> IconInfo[Desk.mode].Number then
+  begin
+  PNG:=TPNGImage.Create;
+  PNG.LoadFromResourceName(ImagesDLL, IconInfo[Desk.mode].Name);
+  DeskPanel[NDesk].Color:=IconInfo[Desk.mode].Color;
+  Image.Tag:=IconInfo[Desk.mode].Number;
+  Image.Picture.Assign(PNG);
+  PNG.Free;
+  end;
+end;
+
+procedure TForm1.InitialiseDesks;
+begin
+  Desk_Bass[1].NoBass := 1;
+  Desk_Bass[2].NoBass := 2;
+  Desk_Bass[1].mode := pmstop;
+  Desk_Bass[2].mode := pmstop;
+  Desk_bass[1].Balance := -1;
+  Desk_bass[2].Balance := 1;
+  Desk_bass[1].ScrollBarScroll := false;
+  Desk_bass[2].ScrollBarScroll := false;
+  Desk_bass[1].LabelList := TStringList.Create;
+  Desk_bass[2].LabelList := TStringList.Create;
+  SEList[1].SE1 := SpinEdit1;
+  SEList[1].SE2 := SpinEdit2;
+  SEList[2].SE1 := SpinEdit3;
+  SEList[2].SE2 := SpinEdit4;
+  DeskPanel[1] := Panel7;
+  DeskPanel[2] := Panel8;
+end;
+
 procedure TForm1.CheckStatus(Desk: TBass; DeskN: Byte);       //Проверка статуса
 var
   Pos,Len:Int64;
@@ -248,83 +299,16 @@ procedure TForm1.DeskDisplayUpdate(Desk: TBass; Position: TLabel;    // Обновить
   Track_Panel: TPanel; Track_Image: TImage);
 var
   Pos:Double;
-  PosB, LengthB:DWord;
-  T_Position:Integer;
-  FullRect, FillRect, DiffRect: TRect;
+  PosB:DWord;
   smin,ssec,Temp:string;
   bmin,bsec:Integer;
-  PicChanged:boolean;
-  PNG:TPNGImage;
 begin
-PosB:=BASS_ChannelGetPosition(Desk.Channel, 0);                      // Получить текущую позицию
-LengthB := BASS_ChannelGetLength(Desk.Channel, 0);                   // ...и общую длину
+PosB:=BASS_ChannelGetPosition(Desk_Bass[NDesk].Channel, 0);                      // Получить текущую позицию
 
-if Track_Clicked[NDesk] then
-  begin
-  PosB := Bass_ChannelGetPosition(Desk_Bass[NDesk].Channel, 0);
-  T_Position := round( PosB / LengthB * Track_Image.Width );
+// Нарисовать треки
+DrawTrack(Desk_Bass[NDesk], NDesk, Track_Image, Track_Panel);
 
-  FullRect.Left := 0;
-  FullRect.Top := 0;
-  FullRect.Right := Track_Image.Width;
-  FullRect.Bottom := Track_Image.Height;
-
-  FillRect.Left := 0;
-  FillRect.Top := 0;
-  FillRect.Bottom := Track_Image.Height;
-
-  DiffRect.Bottom := Track_Image.Height;
-  DiffRect.Top := 0;
-
-  if Track_Mouse_pos[NDesk] < T_Position then
-    begin
-    FillRect.Right := Track_Mouse_pos[NDesk];
-    DiffRect.Left := Track_Mouse_pos[NDesk];
-    DiffRect.Right := T_Position;
-    end
-   else
-    begin
-    FillRect.Right := T_Position;
-    DiffRect.Left := T_Position;
-    DiffRect.Right := Track_Mouse_pos[NDesk];
-    end;
-
-  if (Track_Pos[NDesk] <> T_Position) then
-    begin
-    Track_Image.Canvas.Pen.Color := IndBackColor;
-    Track_Image.Canvas.Brush.Color := IndBackColor;
-    Track_Image.Canvas.FillRect(FullRect);
-    Track_Image.Canvas.Pen.Color := IndForColor;
-    Track_Image.Canvas.Brush.Color := IndForColor;
-    Track_Image.Canvas.FillRect(FillRect);
-    Track_Image.Canvas.Pen.Color := IndMidColor;
-    Track_Image.Canvas.Brush.Color := IndMidColor;
-    Track_Image.Canvas.FillRect(DiffRect);
-    Track_Pos[NDesk] := T_Position;
-    end;
-  end
- else
-  begin
-  FullRect.Left := 0;
-  FullRect.Top := 0;
-  FullRect.Right := Track_Image.Width;
-  FullRect.Bottom := Track_Image.Height;
-  FillRect.Left := 0;
-  FillRect.Top := 0;
-  FillRect.Right := round( Track_Panel.Width * PosB / LengthB );
-  FillRect.Bottom := Track_Image.Height;
-  if (Track_Pos[NDesk] <> round( Track_Panel.Width * PosB / LengthB )) then
-    begin
-    Track_Image.Canvas.Brush.Color := IndBackColor;
-    Track_Image.Canvas.Pen.Color := IndBackColor;
-    Track_Image.Canvas.FillRect(FullRect);
-    Track_Image.Canvas.Brush.Color := IndForColor;
-    Track_Image.Canvas.Pen.Color := $000000;
-    Track_Image.Canvas.FillRect(FillRect);
-    Track_Pos[NDesk] := round( Track_Panel.Width * PosB / LengthB );
-    end;
-  end;
-
+// Поставить текущее время
 Pos:=BASS_ChannelBytes2Seconds(Desk.Channel, PosB);
 bmin := round(Pos) div 60;
 if bmin < 10 then smin:='0'+IntToStr(bmin) else smin:=IntToStr(bmin);
@@ -333,50 +317,8 @@ if bsec < 10 then ssec:='0'+IntToStr(bsec) else ssec:=IntToStr(bsec);
 Temp:=smin+':'+ssec;
 if Position.Caption<>Temp then Position.Caption:=Temp;
 
-PicChanged:=false;
-case Desk.mode of
-       pmStop:
-         Begin
-         if iiPlay.Tag<>11 then
-           begin
-           PNG:=TPNGImage.Create;
-           PNG.LoadFromResourceName(ImagesDLL, 'stop');
-           PicChanged:=true;
-           DeskPanel[NDesk].Color:=StopPannel;
-           iiPlay.Tag:=11;
-           end;
-         end;
-       pmPlay:
-         begin
-         if iiPlay.Tag<>12 then
-           begin
-           PNG:=TPNGImage.Create;
-           PNG.LoadFromResourceName(ImagesDLL, 'play');
-           PicChanged:=true;
-           DeskPanel[NDesk].Color:=PlayPannel;
-           iiPlay.Tag:=12;
-           end;
-         end;
-       pmPaused:
-         begin
-         if iiPlay.Tag<>13 then
-           begin
-           PNG:=TPNGImage.Create;
-           PNG.LoadFromResourceName(ImagesDLL, 'pause');
-           PicChanged:=true;
-           DeskPanel[NDesk].Color:=PausePannel;
-           iiPlay.Tag:=13;
-           end;
-         end;
-  end;
-
-if PicChanged then
-  begin
-  iiPlay.Picture.Assign(PNG);
-  PNG.Free;
-  end;
-
-
+// Изменить картинку текущего статуса
+ChangePic(Desk, NDesk, iiPlay);
 end;
 
 procedure TForm1.DeskPickDraw(Desk: TBass; Row: TPaintBox);
@@ -417,6 +359,7 @@ procedure TForm1.DrawList(List: TImage; DeskN: Byte);
 var
   I: Integer;
 begin
+// Подготавливаем поле для вывода
 List.Canvas.Font.Name:='Courier New';
 List.Canvas.Font.Size:=round(16 * Scale);
 List.Canvas.Font.Color:=$000000;
@@ -425,11 +368,15 @@ List.Canvas.Pen.Color:=$FFFFFF;
 List.Canvas.Brush.Style:= bsSolid;
 List.Canvas.Rectangle(0,0,List.Width,List.Height);
 List.Canvas.Brush.Style:= bsClear;
+
+// Выводим список
 for I := -8 to 8 do
   begin
+  // Обработка граничных условий
   if I+ListBoxItemSelected[DeskN]<0 then Continue;
   if I+ListBoxItemSelected[DeskN]>ListBoxItems[DeskN].Count-1 then Continue;
 
+  // Обработка цетрального (выбранного) трека
   if I=0 then
     begin
     List.Canvas.Brush.Color:=$880000;
@@ -452,7 +399,7 @@ for I := -8 to 8 do
 
     Continue;
     end;
-	
+	// Обработка нажатого трека
   if ListBoxItemClicked[DeskN] = I+ListBoxItemSelected[DeskN] then
     begin
     List.Canvas.Brush.Color:=$00FFFF;
@@ -476,10 +423,13 @@ for I := -8 to 8 do
     Continue;
     end;
 
+  // Обработка простого трека
   List.Canvas.TextOut(round(5*Scale),
                         round(168*Scale+I*21*Scale),
                         ListBoxItems[DeskN][I+ListBoxItemSelected[DeskN]]);
   end;
+
+// Завершение рисования
 List.Canvas.Pen.Color:=$000000;
 List.Canvas.MoveTo(0,0);
 List.Canvas.LineTo(List.Width-1,0);
@@ -494,6 +444,97 @@ List.Canvas.LineTo(1,List.Height-2);
 List.Canvas.LineTo(1,1);
 end;
 
+procedure TForm1.DrawTrack(Desk: TBass; NDesk: byte; Image: TImage; Panel: TPanel; Force: boolean = false);
+var
+  PosB, LengthB:DWord;
+  T_Position:Integer;
+  FullRect, FillR, DiffRect: TRect;
+  I: Integer;
+begin
+PosB:=BASS_ChannelGetPosition(Desk.Channel, 0);                      // Получить текущую позицию
+LengthB := BASS_ChannelGetLength(Desk.Channel, 0);
+if Track_Clicked[NDesk] then
+  begin
+  T_Position := round( PosB / LengthB * Image.Width );
+
+  FullRect.Left := 0;
+  FullRect.Top := 0;
+  FullRect.Right := Image.Width;
+  FullRect.Bottom := Image.Height;
+
+  FillR.Left := 0;
+  FillR.Top := 0;
+  FillR.Bottom := Image.Height;
+
+  DiffRect.Bottom := Image.Height;
+  DiffRect.Top := 0;
+
+  if Track_Mouse_pos[NDesk] < T_Position then
+    begin
+    FillR.Right := Track_Mouse_pos[NDesk];
+    DiffRect.Left := Track_Mouse_pos[NDesk];
+    DiffRect.Right := T_Position;
+    end
+   else
+    begin
+    FillR.Right := T_Position;
+    DiffRect.Left := T_Position;
+    DiffRect.Right := Track_Mouse_pos[NDesk];
+    end;
+
+  if (Track_Pos[NDesk] <> T_Position) then
+    with Image.Canvas do
+      begin
+      Pen.Color := IndBackColor;
+      Brush.Color := IndBackColor;
+      FillRect(FullRect);
+      Pen.Color := IndForColor;
+      Brush.Color := IndForColor;
+      FillRect(FillR);
+      Pen.Color := IndMidColor;
+      Brush.Color := IndMidColor;
+      FillRect(DiffRect);
+      Track_Pos[NDesk] := T_Position;
+      end;
+  end
+ else
+  begin
+  FullRect.Left := 0;
+  FullRect.Top := 0;
+  FullRect.Right := Image.Width;
+  FullRect.Bottom := Image.Height;
+  FillR.Left := 0;
+  FillR.Top := 0;
+  FillR.Right := round( Image.Width * PosB / LengthB );
+  FillR.Bottom := Image.Height;
+  if ((Track_Pos[NDesk] <> round( Image.Width * PosB / LengthB )) or Force) then
+    with Image.Canvas do
+    begin
+    Brush.Color := IndBackColor;
+    Pen.Color := IndBackColor;
+    FillRect(FullRect);
+    Brush.Color := IndForColor;
+    Pen.Color := $000000;
+    FillRect(FillR);
+    Track_Pos[NDesk] := round(Image.Width * PosB / LengthB );
+    end;
+  end;
+
+// Рисование меток
+Image.Canvas.Pen.Color := IndLabColor;
+if Desk.LabelList.Count = 0 then Exit;
+for I := 0 to Desk.LabelList.Count - 1 do
+  begin
+  PosB:=BASS_ChannelSeconds2Bytes(desk.Channel,StrToInt(Desk.LabelList[I]));
+  T_Position := round(Image.Width * PosB / LengthB );
+  with Image.Canvas do
+    begin
+    MoveTo(T_Position, 0);
+    LineTo(T_Position, Image.Height);
+    end;
+  end;
+end;
+
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 RestoreSettings;
@@ -502,6 +543,8 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   i:integer;
+  ADeviceInfo: BASS_DEVICEINFO;
+  USB_Sound_Card_ID:Integer;
 begin
 Eqv:=TEqv.Create(Form1);
 
@@ -529,29 +572,22 @@ for I := 1 to 2 do
 		Halt;
 	end;
 
-	// Инициализация аудио - по умолчанию, 44100hz, stereo, 16 bits
-	if not BASS_Init(-1, 44100, 0, Handle, nil) then
+  //Определение
+  USB_Sound_Card_ID := -1; // По умолчанию
+  i := 0;
+  while BASS_GetDeviceInfo(I, ADeviceInfo) do
+   begin
+     if ADeviceInfo.name = 'Динамики (USB Audio CODEC )' then
+       USB_Sound_Card_ID := i;
+     Inc(i);
+   end;
+	// Инициализация аудио - Динамики (USB Audio CODEC ) или по умолчанию, 44100hz, stereo, 16 bits
+	if not BASS_Init(USB_Sound_Card_ID, 44100, 0, Handle, nil) then
     begin
       MessageBox(0,'Ошибка инициализация аудио',nil,MB_ICONERROR);
 		  Halt;
     end;
-
-Desk_Bass[1].NoBass:=1;
-Desk_Bass[2].NoBass:=2;
-Desk_Bass[1].mode:=pmstop;
-Desk_Bass[2].mode:=pmstop;
-Desk_bass[1].Balance:=-1;
-Desk_bass[2].Balance:=1;
-Desk_bass[1].ScrollBarScroll:=false;
-Desk_bass[2].ScrollBarScroll:=false;
-
-SEList[1].SE1:=SpinEdit1;
-SEList[1].SE2:=SpinEdit2;
-SEList[2].SE1:=SpinEdit3;
-SEList[2].SE2:=SpinEdit4;
-
-DeskPanel[1]:=Panel7;
-DeskPanel[2]:=Panel8;
+  InitialiseDesks;
 
 if DEBUG then ShowMessage('Call ConfigAddress()');
 Config:=TINIFile.Create(ConfigAddress);
@@ -599,20 +635,20 @@ var
 begin
 LowKey:=AnsiLowerCase(Key);
 case LowKey[1] of
-///Дека 1
-'s','ы': Play(1);                         //play
-'d','в': Pause(1);                        //pause
-'f','а': Stop(1);                         //stop
-'e','у': ListUp(1);                       //Вверх по списку
-'x','ч': ListDown(1);                     //Вниз по списку
+  ///Дека 1
+  's','ы': Play(1);                         //play
+  'd','в': Pause(1);                        //pause
+  'f','а': Stop(1);                         //stop
+  'e','у': ListUp(1);                       //Вверх по списку
+  'x','ч': ListDown(1);                     //Вниз по списку
 
-///Дека 2
-'k','л': Play(2);                         //play
-'l','д': Pause(2);                        //pause
-';','ж': Stop(2);                         //stop
-'o','щ': ListUp(2);                       //Вверх по списку
-',','б': ListDown(2);                     //Вниз по списку
-end;
+  ///Дека 2
+  'k','л': Play(2);                         //play
+  'l','д': Pause(2);                        //pause
+  ';','ж': Stop(2);                         //stop
+  'o','щ': ListUp(2);                       //Вверх по списку
+  ',','б': ListDown(2);                     //Вниз по списку
+  end;
 end;
 
 procedure TForm1.Image3Click(Sender: TObject);
@@ -975,7 +1011,7 @@ SEList[SEN].SE2.Visible:=true;
 end;
 
 procedure TForm1.SetMusic(Capt, Timer, Length: TLabel;
-  var Desk: TBass; StringList: TStringList; DeskN: Byte; RepeatImage:TImage);
+  var Desk: TBass; StringList: TStringList; DeskN: Byte; RepeatImage, TrackImage:TImage);
 var
   smin,ssec:string;
   bmin,bsec:Integer;
@@ -983,6 +1019,7 @@ var
   Len:DWord;
   secAll:Double;
   PNG:TPNGImage;
+  i: Integer;
 begin
 
 BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
@@ -1017,6 +1054,16 @@ Capt.Caption:=StringList.Names[ListBoxItemSelected[DeskN]]+' – ' +
 Timer.Caption:='00:00';
 
 Desk.mode:=pmstop;
+
+// Загрузка меток
+Desk.LabelList.Clear;
+i := 1;
+while FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End')<>'End' do
+  begin
+  Desk.LabelList.Add(FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End'));
+  inc(i);
+  end;
+
 if FTP.ReadBool('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'repeat',false) then
   begin
   Desk.RepeatSound:=true;
@@ -1030,6 +1077,8 @@ if FTP.ReadBool('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN
   Desk.RepeatSound:=false;
   RepeatImage.Picture := nil;
   end;
+
+DrawTrack(Desk, DeskN, TrackImage, DeskPanel[DeskN], true);
 end;
 
 procedure TForm1.SetMusicDesk(DeskN: byte);
@@ -1042,12 +1091,12 @@ end;
 
 procedure TForm1.SetMusicDesk1;
 begin
-SetMusic(Label5,Label7,Label9,Desk_Bass[1],Desk1_List,1, Image2);
+SetMusic(Label5,Label7,Label9,Desk_Bass[1],Desk1_List,1, Image2, Track_Image1);
 end;
 
 procedure TForm1.SetMusicDesk2;
 begin
-SetMusic(Label13,Label15,Label17,Desk_Bass[2],Desk2_List,2, Image5);
+SetMusic(Label13,Label15,Label17,Desk_Bass[2],Desk2_List,2, Image5, Track_Image2);
 end;
 
 procedure TForm1.SetScreen(width,height:integer);
@@ -1108,26 +1157,28 @@ var
   B_Position, B_Length: DWord;
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
+  Image: TImage;
 begin
-Track_Pos[TComponent(Sender).Tag] := -1;
+Image := TImage(Sender);
+Track_Pos[Image.Tag] := -1;
 
-Track_Clicked[TComponent(Sender).Tag] := true;
-Track_Mouse_pos[TComponent(Sender).Tag] := X;
+Track_Clicked[Image.Tag] := true;
+Track_Mouse_pos[Image.Tag] := X;
 
-B_Length := Bass_ChannelGetLength(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
-B_Position := Bass_ChannelGetPosition(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
-T_Position := round( B_Position / B_Length * TImage(Sender).Width );
+B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Channel, 0);
+B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Channel, 0);
+T_Position := round( B_Position / B_Length * Image.Width );
 
 FullRect.Left := 0;
 FullRect.Top := 0;
-FullRect.Right := TImage(Sender).Width;
-FullRect.Bottom := TImage(Sender).Height;
+FullRect.Right := Image.Width;
+FullRect.Bottom := Image.Height;
 
 FillRect.Left := 0;
 FillRect.Top := 0;
-FillRect.Bottom := TImage(Sender).Height;
+FillRect.Bottom := Image.Height;
 
-DiffRect.Bottom := TImage(Sender).Height;
+DiffRect.Bottom := Image.Height;
 DiffRect.Top := 0;
 
 if X < B_Position then
@@ -1143,15 +1194,15 @@ if X < B_Position then
   DiffRect.Right := X;
   end;
 
-TImage(Sender).Canvas.Pen.Color := IndBackColor;
-TImage(Sender).Canvas.Brush.Color := IndBackColor;
-TImage(Sender).Canvas.FillRect(FullRect);
-TImage(Sender).Canvas.Pen.Color := IndForColor;
-TImage(Sender).Canvas.Brush.Color := IndForColor;
-TImage(Sender).Canvas.FillRect(FillRect);
-TImage(Sender).Canvas.Pen.Color := IndMidColor;
-TImage(Sender).Canvas.Brush.Color := IndMidColor;
-TImage(Sender).Canvas.FillRect(DiffRect);
+Image.Canvas.Pen.Color := IndBackColor;
+Image.Canvas.Brush.Color := IndBackColor;
+Image.Canvas.FillRect(FullRect);
+Image.Canvas.Pen.Color := IndForColor;
+Image.Canvas.Brush.Color := IndForColor;
+Image.Canvas.FillRect(FillRect);
+Image.Canvas.Pen.Color := IndMidColor;
+Image.Canvas.Brush.Color := IndMidColor;
+Image.Canvas.FillRect(DiffRect);
 
 end;
 
@@ -1161,27 +1212,29 @@ var
   B_Position, B_Length: DWord;
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
+  Image: TImage;
 begin
-Track_Pos[TComponent(Sender).Tag] := -1;
+Image := TImage(Sender);
+Track_Pos[Image.Tag] := -1;
 
-if not Track_Clicked[TComponent(Sender).Tag] then Exit;
+if not Track_Clicked[Image.Tag] then Exit;
 
-Track_Mouse_pos[TComponent(Sender).Tag] := X;
+Track_Mouse_pos[Image.Tag] := X;
 
-B_Length := Bass_ChannelGetLength(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
-B_Position := Bass_ChannelGetPosition(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
-T_Position := round( B_Position / B_Length * TImage(Sender).Width );
+B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Channel, 0);
+B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Channel, 0);
+T_Position := round( B_Position / B_Length * Image.Width );
 
 FullRect.Left := 0;
 FullRect.Top := 0;
-FullRect.Right := TImage(Sender).Width;
-FullRect.Bottom := TImage(Sender).Height;
+FullRect.Right := Image.Width;
+FullRect.Bottom := Image.Height;
 
 FillRect.Left := 0;
 FillRect.Top := 0;
-FillRect.Bottom := TImage(Sender).Height;
+FillRect.Bottom := Image.Height;
 
-DiffRect.Bottom := TImage(Sender).Height;
+DiffRect.Bottom := Image.Height;
 DiffRect.Top := 0;
 
 if X < B_Position then
@@ -1197,15 +1250,15 @@ if X < B_Position then
   DiffRect.Right := X;
   end;
 
-TImage(Sender).Canvas.Pen.Color := IndBackColor;
-TImage(Sender).Canvas.Brush.Color := IndBackColor;
-TImage(Sender).Canvas.FillRect(FullRect);
-TImage(Sender).Canvas.Pen.Color := IndForColor;
-TImage(Sender).Canvas.Brush.Color := IndForColor;
-TImage(Sender).Canvas.FillRect(FillRect);
-TImage(Sender).Canvas.Pen.Color := IndMidColor;
-TImage(Sender).Canvas.Brush.Color := IndMidColor;
-TImage(Sender).Canvas.FillRect(DiffRect);
+Image.Canvas.Pen.Color := IndBackColor;
+Image.Canvas.Brush.Color := IndBackColor;
+Image.Canvas.FillRect(FullRect);
+Image.Canvas.Pen.Color := IndForColor;
+Image.Canvas.Brush.Color := IndForColor;
+Image.Canvas.FillRect(FillRect);
+Image.Canvas.Pen.Color := IndMidColor;
+Image.Canvas.Brush.Color := IndMidColor;
+Image.Canvas.FillRect(DiffRect);
 
 end;
 
@@ -1224,16 +1277,11 @@ Bass_ChannelSetPosition(Desk_Bass[TComponent(Sender).Tag].Channel, B_Position, 0
 Track_Clicked[TComponent(Sender).Tag] := false;
 end;
 
-procedure TForm1.ActivationTimer(Sender: TObject);
-begin
-If Application.Active = False then Application.BringToFront;
-end;
-
 procedure TForm1.UpdateTimerTimer(Sender: TObject);
 var
   S:string;
 begin
-DeskDisplayUpdate(Desk_bass[1],Label7, Image1, 1, Track1, Track_Image1);
+DeskDisplayUpdate(Desk_bass[1],Label7,  Image1, 1, Track1, Track_Image1);
 DeskDisplayUpdate(Desk_bass[2],Label15, Image4, 2, Track2, Track_Image2);
 DeskPickDraw(Desk_Bass[1],PaintBox1);
 DeskPickDraw(Desk_Bass[2],PaintBox2);
