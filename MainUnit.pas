@@ -81,13 +81,13 @@ type
     ListBox2: TImage;
     Track1: TPanel;
     Track2: TPanel;
-    Track_Image1: TImage;
-    Track_Image2: TImage;
     Black_Left: TShape;
     Black_Right: TShape;
+    Track_Image1: TPaintBox;
+    Track_Image2: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
-      var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage, TrackImage:TImage);
+      var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage: TImage; TrackImage:TPaintBox);
     procedure SetMusicDesk1;
     procedure SetMusicDesk2;
     procedure SetMusicDesk(DeskN:byte);
@@ -95,7 +95,7 @@ type
     procedure UpdateTimerTimer(Sender: TObject);
     procedure DeskDisplayUpdate(Desk: TBass; Position: TLabel;
       iiPlay:TImage; NDesk:byte;
-      Track_Panel: TPanel; Track_Image: TImage);
+      Track_Panel: TPanel; Track_Image: TPaintBox);
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -143,7 +143,7 @@ type
     procedure RestoreSettings;
     procedure DrawList(List: TImage; DeskN:Byte);
     procedure ScaleComponents;
-    procedure DrawTrack(Desk: TBass; NDesk: byte; Image: TImage; Panel: TPanel; Force: boolean = false);
+    procedure DrawTrack(Desk: TBass; NDesk: byte; Image: TPaintBox; Panel: TPanel; Force: boolean = false);
     procedure ChangePic(Desk: TBass; NDesk: Byte; Image: TImage);
     procedure InitialiseDesks;
   public
@@ -296,7 +296,7 @@ end;
 
 procedure TForm1.DeskDisplayUpdate(Desk: TBass; Position: TLabel;    // Обновить показания дисплея
   iiPlay:TImage; NDesk:byte;
-  Track_Panel: TPanel; Track_Image: TImage);
+  Track_Panel: TPanel; Track_Image: TPaintBox);
 var
   Pos:Double;
   PosB:DWord;
@@ -444,7 +444,7 @@ List.Canvas.LineTo(1,List.Height-2);
 List.Canvas.LineTo(1,1);
 end;
 
-procedure TForm1.DrawTrack(Desk: TBass; NDesk: byte; Image: TImage; Panel: TPanel; Force: boolean = false);
+procedure TForm1.DrawTrack(Desk: TBass; NDesk: byte; Image: TPaintBox; Panel: TPanel; Force: boolean = false);
 var
   PosB, LengthB:DWord;
   T_Position:Integer;
@@ -547,6 +547,10 @@ var
   USB_Sound_Card_ID:Integer;
 begin
 Eqv:=TEqv.Create(Form1);
+
+for i:=0 to ComponentCount-1 do
+     if Components[i] is TWinControl then
+           TWinControl(Components[i]).DoubleBuffered:=true;
 
 ImagesDLL:=LoadLibrary('images.dll');
 if ImagesDLL <= 32 then
@@ -1011,7 +1015,7 @@ SEList[SEN].SE2.Visible:=true;
 end;
 
 procedure TForm1.SetMusic(Capt, Timer, Length: TLabel;
-  var Desk: TBass; StringList: TStringList; DeskN: Byte; RepeatImage, TrackImage:TImage);
+  var Desk: TBass; StringList: TStringList; DeskN: Byte; RepeatImage: TImage; TrackImage:TPaintBox);
 var
   smin,ssec:string;
   bmin,bsec:Integer;
@@ -1157,9 +1161,9 @@ var
   B_Position, B_Length: DWord;
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
-  Image: TImage;
+  Image: TPaintBox;
 begin
-Image := TImage(Sender);
+Image := TPaintBox(Sender);
 Track_Pos[Image.Tag] := -1;
 
 Track_Clicked[Image.Tag] := true;
@@ -1212,9 +1216,9 @@ var
   B_Position, B_Length: DWord;
   T_Position: Integer;
   FullRect, FillRect, DiffRect: TRect;
-  Image: TImage;
+  Image: TPaintBox;
 begin
-Image := TImage(Sender);
+Image := TPaintBox(Sender);
 Track_Pos[Image.Tag] := -1;
 
 if not Track_Clicked[Image.Tag] then Exit;

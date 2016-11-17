@@ -7,6 +7,7 @@ object Form1: TForm1
   ClientHeight = 768
   ClientWidth = 1024
   Color = clBtnFace
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -1418,7 +1419,7 @@ object Form1: TForm1
     Height = 25
     BevelOuter = bvLowered
     TabOrder = 12
-    object Track_Image1: TImage
+    object Track_Image1: TPaintBox
       Tag = 1
       Left = 1
       Top = 1
@@ -1428,8 +1429,8 @@ object Form1: TForm1
       OnMouseDown = Track_Image1MouseDown
       OnMouseMove = Track_Image1MouseMove
       OnMouseUp = Track_Image1MouseUp
-      ExplicitLeft = 20
-      ExplicitWidth = 447
+      ExplicitLeft = 2
+      ExplicitTop = 2
     end
   end
   object Track2: TPanel
@@ -1440,7 +1441,7 @@ object Form1: TForm1
     Height = 25
     BevelOuter = bvLowered
     TabOrder = 13
-    object Track_Image2: TImage
+    object Track_Image2: TPaintBox
       Tag = 2
       Left = 1
       Top = 1
@@ -1450,8 +1451,10 @@ object Form1: TForm1
       OnMouseDown = Track_Image1MouseDown
       OnMouseMove = Track_Image1MouseMove
       OnMouseUp = Track_Image1MouseUp
-      ExplicitLeft = 2
-      ExplicitTop = 2
+      ExplicitLeft = 104
+      ExplicitTop = 8
+      ExplicitWidth = 105
+      ExplicitHeight = 105
     end
   end
   object OD: TOpenDialog
