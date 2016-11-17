@@ -1,0 +1,69 @@
+[General]
+program=StD Player
+files=9
+name=Женитьба
+description=совершенно невероятное событие в двух действиях     
+[Desk 1 Parameters]
+directory=Женитьба\
+[Desk 2 Parameters]
+directory=Женитьба\
+[N1]
+file=G 1.mp3
+title=Presto
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+[N2]
+file=G 2.mp3
+title=Ан нет...!
+comment=none
+[N3]
+file=G 3.mp3
+title=Presto (ускоренный)
+comment=none
+[N4]
+file=G 4a.mp3
+title=Andante (фрагмент)
+comment=none
+[N5]
+file=G 4s.mp3
+title=Andante
+comment=none
+[N6]
+file=G 5.mp3
+title=Non largo
+comment=none
+[N7]
+file=G 6.mp3
+title=Ох!... + копыта
+comment=none
+[N8]
+file=G 7.mp3
+title=Adajio
+comment=none
+[N9]
+file=G2 1.mp3
+title=Тасовка
+comment=none
+repeat=1
+[Desk 1 Numbers]
+G1=1
+G2=2
+G2a=2
+G3=3
+G4=5
+G4a=4
+G5=6
+G5a=6
+G6=7
+G7=8
+[Desk 2 Numbers]
+G2 1=9

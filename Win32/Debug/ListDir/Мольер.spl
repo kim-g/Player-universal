@@ -1,0 +1,360 @@
+[General]
+program=StD Player
+files=57
+name=Мольер
+[Desk 1 Parameters]
+directory=d:\Music\Мольер
+[Desk 2 Parameters]
+directory=d:\Music\Мольер
+[N1]
+file=МБ А.mp3
+title=Увертюра А
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+30=30
+31=31
+32=32
+33=33
+34=34
+35=35
+36=36
+37=37
+38=38
+39=39
+40=40
+41=41
+42=42
+43=43
+44=44
+45=45
+46=46
+47=47
+48=48
+49=49
+50=50
+51=51
+52=52
+53=53
+54=54
+55=55
+56=56
+57=57
+[N2]
+file=МБ B.mp3
+title=Увертюра Б
+comment=none
+[N3]
+file=МБ 00.mp3
+title=«Булгаков и Мольер»
+comment=none
+[N4]
+file=МБ 01.mp3
+title=Перебор струн – 1
+comment=none
+[N5]
+file=МБ 02.mp3
+title=Орган – 1
+comment=none
+[N6]
+file=МБ 03.mp3
+title=Орган – 2
+comment=none
+[N7]
+file=МБ 04.mp3
+title=Гимн Короля и Аплодисменты
+comment=none
+[N8]
+file=МБ 05.mp3
+title=Аплодисменты
+comment=none
+[N9]
+file=МБ 06.mp3
+title=Аплодисменты «Да здравствует Король!»
+comment=none
+[N10]
+file=МБ 07.mp3
+title=Клависин Шарлатана
+comment=none
+[N11]
+file=МБ 08.mp3
+title=Аплодисменты, смех
+comment=none
+[N12]
+file=МБ 09.mp3
+title=Аплодисменты «Браво Мольер!»
+comment=none
+[N13]
+file=МБ 09a.mp3
+title=Аплодисменты «Браво, Мольер!»
+comment=none
+[N14]
+file=МБ 10.mp3
+title=Гимн Короля
+comment=none
+[N15]
+file=МБ 11.mp3
+title=Гимн Короля
+comment=none
+[N16]
+file=МБ 12.mp3
+title=7 слов Христа (уход Мадлены)
+comment=none
+[N17]
+file=МБ 13.mp3
+title=Переборы клавесина
+comment=none
+[N18]
+file=МБ 14.mp3
+title=Клавесин – танец
+comment=none
+[N19]
+file=МБ 14a.mp3
+title=Перебор струн
+comment=none
+[N20]
+file=МБ 15.mp3
+title=Гимн Короля
+comment=none
+[N21]
+file=МБ 16.mp3
+title=Гимн Короля
+comment=none
+[N22]
+file=МБ 17.mp3
+title=Перебор струн
+comment=none
+[N23]
+file=МБ 18.mp3
+title=«Вы видели Тартюфа?» – Клавесин
+comment=none
+[N24]
+file=МБ 19.mp3
+title=7 слов Христа
+comment=none
+[N25]
+file=МБ 20.mp3
+title=Клавесин
+comment=none
+[N26]
+file=МБ 20a.mp3
+title=Клавесин
+comment=none
+[N27]
+file=МБ 21.mp3
+title=Перебор струн
+comment=none
+[N28]
+file=МБ 22.mp3
+title=Буксующий клавесин
+comment=none
+[N29]
+file=МБ 23.mp3
+title=Замедленный клавесин
+comment=none
+[N30]
+file=МБ 24.mp3
+title=Перебор струн
+comment=none
+[N31]
+file=МБ 25.mp3
+title=Собор
+comment=none
+[N32]
+file=МБ 26.mp3
+title=Хор торжественный
+comment=none
+[N33]
+file=МБ 28.mp3
+title=7 слов Христа
+comment=none
+[N34]
+file=МБ 28a.mp3
+title=Хор торжественный
+comment=none
+[N35]
+file=МБ 30.mp3
+title=Перебор струн
+comment=none
+[N36]
+file=МБ 31.mp3
+title=Перебор струн
+comment=none
+[N37]
+file=МБ 31a.mp3
+title=Перебор струн
+comment=none
+[N38]
+file=МБ 32.mp3
+title=Молитва
+comment=none
+[N39]
+file=МБ 34.mp3
+title=Барабан
+comment=none
+[N40]
+file=МБ 35.mp3
+title=Голос д'Орсиньи – Барабан
+comment=none
+[N41]
+file=МБ 36.mp3
+title=Барабаны – Хор
+comment=none
+[N42]
+file=МБ 37.mp3
+title=Барабан
+comment=none
+[N43]
+file=МБ 38.mp3
+title=Барабан
+comment=none
+[N44]
+file=МБ 39.mp3
+title=Барабан
+comment=none
+[N45]
+file=МБ 40.mp3
+title=Горькая скрипка (часослов)
+comment=none
+[N46]
+file=МБ 40a.mp3
+title=Часослов – барабан – хор
+comment=none
+[N47]
+file=МБ 41.mp3
+title=Барабан (часослов)
+comment=none
+[N48]
+file=МБ 43.mp3
+title=Барабан сконцентрированный
+comment=none
+[N49]
+file=МБ 44.mp3
+title=Смятение – Хаос
+comment=none
+repeat=1
+[N50]
+file=МБ 44a.mp3
+title=Топот и свист
+comment=none
+[N51]
+file=МБ 45.mp3
+title=Смятение – хаос
+comment=none
+[N52]
+file=МБ 45a.mp3
+title=Смех
+comment=none
+[N53]
+file=МБ 46.mp3
+title=Бэмс – речь монашки – барабан
+comment=none
+[N54]
+file=МБ 47.mp3
+title=Барабан сконцентрированный
+comment=none
+[N55]
+file=МБ 48.mp3
+title=Горькая скрипка
+comment=none
+[N56]
+file=МБ 49.mp3
+title=Аллилуйа
+comment=none
+[N57]
+file=МБ 50.mp3
+title=Аллилуйа – концовка
+comment=none
+[Desk 2 Numbers]
+МБ А=1
+МБ 0=3
+МБ 1=4
+МБ 3=6
+МБ 14a=19
+МБ 16=21
+МБ 18=23
+МБ 20a=26
+МБ 23=29
+МБ 25=31
+МБ 27=31
+МБ 29=31
+МБ 31a=37
+МБ 33=31
+МБ 36=41
+МБ 40=45
+МБ 42=45
+МБ 44=49
+МБ 45a=52
+МБ 45b=52
+МБ 45c=52
+МБ 45d=52
+МБ 46=53
+МБ 48=55
+МБ 50=57
+[Desk 1 Numbers]
+МБ Б=2
+МБ 2=5
+МБ 4=7
+МБ 5=8
+МБ 6=9
+МБ 7=10
+МБ 8=11
+МБ 9=12
+МБ 9a=13
+МБ 10=14
+МБ 11=15
+МБ 12=16
+МБ 13=17
+МБ 14=18
+МБ 15=20
+МБ 17=22
+МБ 19=24
+МБ 20=25
+МБ 21=27
+МБ 22=28
+МБ 24=30
+МБ 26=32
+МБ 28=33
+МБ 28a=34
+МБ 30=35
+МБ 31=36
+МБ 32=38
+МБ 34=39
+МБ 35=40
+МБ 37=42
+МБ 38=43
+МБ 39=44
+МБ 40a=46
+МБ 41=47
+МБ 44a=50
+МБ 45=51
+МБ 47=54
+МБ 49=56

@@ -1,0 +1,209 @@
+[General]
+program=StD Player
+files=30
+name=Весёлая жизнь 
+description=Сценическая версия 2009 года   
+[Desk 1 Parameters]
+directory=Весёлая жизнь
+[Desk 2 Parameters]
+directory=Весёлая жизнь
+
+[N1]
+file=VG00.mp3
+title=Отзвук вальса
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+30=30
+[N2]
+file=VG01.mp3
+title=Отзвук вальса
+comment=none
+[N3]
+file=VG02.mp3
+title=Вопли генеральши
+comment=none
+repeat=1
+[N4]
+file=VG04.mp3
+title=Шаги
+comment=none
+repeat=1
+[N5]
+file=VG05.mp3
+title=Стук – «Что нужно?...»
+comment=none
+[N6]
+file=VG06.mp3
+title=«Это циркачку то?»
+comment=none
+[N7]
+file=VG07.mp3
+title=Скрип двери
+comment=none
+[N8]
+file=VG08.mp3
+title=Вальс
+comment=none
+[N9]
+file=VG09.mp3
+title=Поезд – Гудок
+comment=none
+[N10]
+file=VG10.mp3
+title=Птички
+comment=none
+repeat=1
+[N11]
+file=VG11.mp3
+title=Отзвук вальса
+comment=none
+[N12]
+file=VG12.mp3
+title=Медленный поезд
+comment=none
+repeat=1
+[N13]
+file=VG19.mp3
+title=Поезд
+comment=none
+repeat=1
+[N14]
+file=VG21.mp3
+title=Поезд – Гудок
+comment=none
+[Desk 1 Numbers]
+ВЖ 0=1
+ВЖ 1=2
+ВЖ 3=1
+ВЖ 5=5
+ВЖ 6=6
+ВЖ 7=7
+ВЖ 8=8
+ВЖ 10=10
+ВЖ 12=12
+ВЖ 14=12
+ВЖ 16=8
+ВЖ 18=12
+ВЖ 21=14
+ВЖ 22=1
+МЕТ 1=15
+МЕТ 2=1
+ИСП 1=16
+ИСП 2=17
+ИСП 3=18
+ИСП 4=19
+ИНТ 1=20
+ПРОТ 1=1
+МОЛ 2=22
+МОЛ 3=23
+МОЛ 4=24
+МОЛ 5=25
+МОЛ 6=26
+ФОТО 1=1
+ФОТО 2=28
+ФОТО 4=30
+[Desk 2 Numbers]
+ВЖ 2=3
+ВЖ 4=4
+ВЖ 9=9
+ВЖ 11=11
+ВЖ 13=10
+ВЖ 15=11
+ВЖ 17=2
+ВЖ 19=13
+МОЛ 1=21
+ИНТ 2=27
+ФОТО 3=29
+[N15]
+file=MET1.mp3
+title=Марсельеза
+comment=none
+[N16]
+file=ISP1.mp3
+title=Инес-1
+comment=none
+[N17]
+file=ISP2.mp3
+title=Инес-2
+comment=none
+[N18]
+file=ISP3.mp3
+title=Инес-3
+comment=none
+[N19]
+file=ISP4.mp3
+title=Инес-4
+comment=none
+[N20]
+file=INT1.mp3
+title=Интермедия «Пишешь, пишешь...»
+comment=none
+[N21]
+file=MOL1.mp3
+title=Блантер – Увертюра
+comment=none
+[N22]
+file=MOL2.mp3
+title=Блантер – Концовка увертюры
+comment=none
+[N23]
+file=MOL3.mp3
+title=Блантер – Проигрыш убыстренный
+comment=none
+[N24]
+file=MOL4.mp3
+title=Блантер – Проигрыш убыстренный
+comment=none
+[N25]
+file=MOL5.mp3
+title=Блантер – Интермедия
+comment=none
+[N26]
+file=MOL6.mp3
+title=Блантер – Финал
+comment=none
+[N27]
+file=INT2.mp3
+title=Интермедия «Обычно думают...»
+comment=none
+[N28]
+file=FOTO2.mp3
+title=Хор
+comment=none
+[N29]
+file=FOTO3.mp3
+title=Гимн великому городу
+comment=none
+[N30]
+file=FOTO4.mp3
+title=Вальс – Поклон
+comment=none

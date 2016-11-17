@@ -1,0 +1,207 @@
+[General]
+program=StD Player
+files=32
+name=Вешние воды 
+[Desk 1 Parameters]
+directory=d:\Music\Вешние воды\
+[Desk 2 Parameters]
+directory=d:\Music\Вешние воды\
+[N1]
+file=01&02 - Жалоба.mp3
+title=Жалоба
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+30=30
+31=31
+32=32
+
+[N2]
+file=18 - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N3]
+file=19 - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N4]
+file=19a - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N5]
+file=19b - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N6]
+file=20 - Свист.mp3
+title=Свист
+comment=none
+[N7]
+file=21 - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N8]
+file=22 - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N9]
+file=23 - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N10]
+file=24a - Инфернальный вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N11]
+file=27 - Инфернальный вальс + Гром.mp3
+title=Инфернальный вальс + Гром
+comment=none
+[N12]
+file=28, 28a - Эней + Инфернальный вальс + Жалоба.mp3
+title=Эней + Инфернальный вальс + Жалоба
+comment=none
+[N13]
+file=03 - Жалоба.mp3
+title=Жалоба
+comment=none
+[N14]
+file=04&05 - Инфернальный вальс + свист.mp3
+title=Инфернальный вальс + свист
+comment=none
+[N15]
+file=06 - Свист.mp3
+title=Свист
+comment=none
+[N16]
+file=07 - Свист.mp3
+title=Свист
+comment=none
+[N17]
+file=08 - Свист.mp3
+title=Свист
+comment=none
+[N18]
+file=09 - Свист.mp3
+title=Свист
+comment=none
+[N19]
+file=10 - Свист.mp3
+title=Свист
+comment=none
+[N20]
+file=10а - свист.mp3
+title=Свист
+[N21]
+file=11 - Инф. вальс.mp3
+title=Инфернальный вальс
+comment=none
+[N22]
+file=12 - Жалобный вальс.mp3
+title=Жалобный вальс
+comment=none
+[N23]
+file=13 - Жалобный вальс.mp3
+title=Жалобный вальс
+comment=none
+[N24]
+file=14 - Жалобный вальс.mp3
+title=Жалобный вальс
+comment=none
+[N25]
+file=15 - Гром.mp3
+title=Гром
+comment=none
+[N26]
+file=16 - Жалобный вальс.mp3
+title=Жалобный вальс
+comment=none
+[N27]
+file=17 - Звенящий звук.mp3
+title=Звенящий звук
+comment=none
+[N28]
+file=28b - Инфернальный вальс + Гром.mp3
+title=Инфернальный вальс + Гром
+comment=none
+[N29]
+file=29 - Фагот.mp3
+title=Фагот
+comment=none
+[N30]
+file=30 - Фагот.mp3
+title=Фагот
+comment=none
+[N31]
+file=31 - Lacrimosa.mp3
+title=Lacrimosa
+comment=none
+[Desk 1 Numbers]
+ВВ 01и02=1
+ВВ 03=13
+ВВ 04и05=14
+ВВ 06=15
+ВВ 07=16
+ВВ 08=17
+ВВ 09=18
+ВВ 10=19
+ВВ 10а=20
+ВВ 11=21
+ВВ 12=22
+ВВ 13=23
+ВВ 14=24
+ВВ 15=25
+ВВ 16=26
+ВВ 17=27
+ВВ 18=2
+ВВ 19=3
+ВВ 19а=4
+ВВ 19b=5
+ВВ 20=6
+ВВ 21=7
+ВВ 22=8
+ВВ 23=9
+ВВ 24=9
+ВВ 24a=10
+ВВ 25=8
+ВВ 25a=9
+ВВ 26=9
+ВВ 27=11
+ВВ 28=12
+ВВ 28b=28
+ВВ 29=29
+ВВ 30=30
+ВВ 31=31
+[N32]
+file=NONE.mp3
+title=Пусто
+comment=none
+[Desk 2 Numbers]
+Дека 2=32

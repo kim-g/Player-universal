@@ -1,0 +1,185 @@
+[General]
+program=StD Player
+files=29
+name=Мизантроп
+[Desk 1 Parameters]
+directory=D:\Music\Мизантроп
+[Desk 2 Parameters]
+directory=D:\Music\Мизантроп
+[N1]
+file=MP-01.mp3
+title=Увертюра (Бах)
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+[N2]
+file=MP-02.mp3
+title=Бунт Альцеста
+comment=none
+[N3]
+file=MP-03.mp3
+title=Интроитус
+comment=none
+[N4]
+file=MP-03a.mp3
+title=Интроитус
+comment=none
+[N5]
+file=MP-04a.mp3
+title=Марчелло
+comment=none
+[N6]
+file=MP-04b.mp3
+title=Марчелло
+comment=none
+[N7]
+file=MP-05.mp3
+title=Марчелло + Голоса
+comment=none
+[N8]
+file=MP-05a.mp3
+title=Марчелло
+comment=none
+[N9]
+file=MP-06.mp3
+title=Марчелло
+comment=none
+[N10]
+file=MP-07.mp3
+title=Марчелло
+comment=none
+[N11]
+file=MP-08.mp3
+title=Марчелло
+comment=none
+[N12]
+file=MP-09a.mp3
+title=Интриги (Антракт)
+comment=none
+[N13]
+file=MP-09b.mp3
+title=Интриги
+comment=none
+[N14]
+file=MP-09c.mp3
+title=Интриги
+comment=none
+[N15]
+file=MP-10.mp3
+title=Интриги
+comment=none
+[N16]
+file=MP-11.mp3
+title=Марчелло
+comment=none
+[N17]
+file=MP-12.mp3
+title=Интриги
+comment=none
+[N18]
+file=MP-13.mp3
+title=Интриги
+comment=none
+[N19]
+file=MP-13a.mp3
+title=Интроитус
+comment=none
+[N20]
+file=MP-14a.mp3
+title=Интриги
+comment=none
+[N21]
+file=MP-14b.mp3
+title=Интриги
+comment=none
+[N22]
+file=MP-15.mp3
+title=Интриги
+comment=none
+[N23]
+file=MP-16.mp3
+title=Интриги
+comment=none
+[N24]
+file=MP-17.mp3
+title=Интриги
+comment=none
+[N25]
+file=MP-18.mp3
+title=Интриги
+comment=none
+[N26]
+file=MP-19a.mp3
+title=Рваные струны
+comment=none
+[N27]
+file=MP-19b.mp3
+title=Марчелло
+comment=none
+[N28]
+file=MP-20.mp3
+title=Интроитус
+comment=none
+[N29]
+file=NONE.mp3
+title=Пусто
+comment=none
+[Desk 1 Numbers]
+МП 1=1
+МП 2=2
+МП 3=3
+МП 3a=4
+МП 4a=5
+МП 4b=6
+МП 5=7
+МП 5a=8
+МП 6=9
+МП 7=10
+МП 8=11
+МП 9a=12
+МП 9b=13
+МП 9c=14
+МП 10=15
+МП 11=16
+МП 12=17
+МП 13=18
+МП 13a=19
+МП 14a=20
+МП 14b=21
+МП 15=22
+МП 16=23
+МП 17=24
+МП 18=25
+МП 19a=26
+МП 19b=27
+МП 20=28
+[Desk 2 Numbers]
+Дека 2=29

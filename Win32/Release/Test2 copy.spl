@@ -1,0 +1,34 @@
+[General]
+program=StD Player
+name=Тест
+description=Тест создания INI файла
+files=2
+
+[Files List]
+1=1
+2=2
+
+[Desk 1 Parameters]
+directory=D:\Театр\Music
+
+[Desk 2 Parameters]
+directory=D:\Театр\Music
+
+[Desk 1 Numbers]
+T1=1
+T3=2
+
+[Desk 2 Numbers]
+T2=2
+T4=1
+
+[N1]
+file=GladOS.mp3
+title=Аранжировка песни GladOS
+comment=none
+
+[N2]
+file=StarWars-Sith.mp3
+title=Появление ситха
+comment=none
+

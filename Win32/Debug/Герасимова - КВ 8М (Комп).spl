@@ -1,0 +1,62 @@
+[General]
+name=КВ 8М (Герасимова)
+description=Кулуарный вечер 8 Марта 2014 года. МС Герасимовой.
+program=StD Player
+files=0
+[Desk 1 Parameters]
+directory=D:\Dropbox\Театр\Герасимова
+[Desk 1 Numbers]
+1
+2
+3
+4
+5
+6
+7
+8
+[Desk 2 Parameters]
+directory=D:\Dropbox\Театр\Герасимова
+[Desk 2 Numbers]
+9
+10
+[N1]
+file=1.mp3
+title=Диана Арбенина – Это и есть любовь (1)
+comment=none
+[N2]
+file=2.mp3
+title=Emir Kusturica – Perhan Sovel
+comment=none
+[N3]
+file=3.mp3
+title=Era – Flowers Of The Sea
+comment=none
+[N4]
+file=2.mp3
+title=Emir Kusturica – Perhan Sovel
+comment=none
+[N5]
+file=3.mp3
+title=Era – Flowers Of The Sea
+comment=none
+[N6]
+file=2.mp3
+title=Emir Kusturica – Perhan Sovel
+comment=none
+[N7]
+file=3.mp3
+title=Era – Flowers Of The Sea
+comment=none
+[N8]
+file=4.mp3
+title=Диана Арбенина – Это и есть любовь (2)
+comment=none
+[N9]
+file=А нам все равно.mp3
+title=Радмир - А нам всё равно...
+comment=none
+[N10]
+file=love me tender minus.mp3
+title=Богдан Топко - Love me tender...
+comment=none
+

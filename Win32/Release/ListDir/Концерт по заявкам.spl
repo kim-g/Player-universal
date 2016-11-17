@@ -1,0 +1,38 @@
+[General]
+program=StD Player
+files=6
+[Desk 1 Parameters]
+directory=
+[Desk 2 Parameters]
+directory=
+[N1]
+file= Ô« 2.mp3
+title= Ô« 2.mp3
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+[N2]
+file= Ô« 3.mp3
+title= Ô« 3.mp3
+comment=none
+[N3]
+file= Ô« 4.mp3
+title= Ô« 4.mp3
+comment=none
+[N4]
+file= Ô« 5.mp3
+title= Ô« 5.mp3
+comment=none
+[N5]
+file= Ô« 6.mp3
+title= Ô« 6.mp3
+comment=none
+[N6]
+file= Ô« 1.mp3
+title= Ô« 1.mp3
+comment=none

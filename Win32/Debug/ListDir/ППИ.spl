@@ -1,0 +1,206 @@
+[General]
+program=StD Player
+files=32
+name=ППИ         
+[Desk 1 Parameters]
+directory=ППИ\
+[Desk 2 Parameters]
+directory=ППИ\
+[N1]
+file=PPI 01.mp3
+title=«Утром это было...»
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+30=30
+31=31
+32=32
+[N2]
+file=PPI 02.mp3
+title=«Двор И.Н...»
+comment=none
+[N3]
+file=PPI 02a.mp3
+title=«Перед домом И.Н...»
+comment=none
+[N4]
+file=PPI 03.mp3
+title=«Итак, два почтенные друга...»
+comment=none
+[N5]
+file=PPI 04.mp3
+title=«Иван Никифорович со своей стороны...»
+comment=none
+[N6]
+file=PPI 05.mp3
+title=«А какое прекрасное хозяйство...»
+comment=none
+[N7]
+file=PPI 06.mp3
+title=Петухи
+comment=none
+[N8]
+file=PPI 07.mp3
+title=«Тятя, тятя, дай пряника»
+comment=none
+[N9]
+file=PPI 08.mp3
+title=«Весьма могло быть...»
+comment=none
+[N10]
+file=PPI 09.mp3
+title=Ссора – Бэмс
+comment=none
+[N11]
+file=PPI 10.mp3
+title=«Наконец к довершению всех оскорблений...»
+comment=none
+[N12]
+file=PPI 11.mp3
+title=«Настала ночь»
+comment=none
+[N13]
+file=PPI 12.mp3
+title=Обрушение
+comment=none
+[N14]
+file=PPI 13.mp3
+title=Бэмс – «Чудный город Миргород!»
+comment=none
+[N15]
+file=PPI 14.mp3
+title=Тревога – «Делать было нечего...»
+comment=none
+[N16]
+file=PPI 15.mp3
+title=Свинья
+comment=none
+[N17]
+file=PPI 16.mp3
+title=«Это чрезвычайное проишествие...»
+comment=none
+[N18]
+file=PPI 17.mp3
+title=Бэмс – «Сколько ни старались...»
+comment=none
+[N19]
+file=PPI 18.mp3
+title=«И уговорила...» – Чернильница
+comment=none
+[N20]
+file=PPI 19.mp3
+title=«Эта просьба...» – Интермедия
+comment=none
+[N21]
+file=PPI 20.mp3
+title=«Между тем...» – Ассамблея
+comment=none
+[N22]
+file=PPI 21.mp3
+title=Лай собак
+comment=none
+[N23]
+file=PPI 21a.mp3
+title=Ballet
+comment=none
+repeat=1
+[N24]
+file=PPI 22.mp3
+title=Ассамблея 2
+comment=none
+[N25]
+file=PPI 23.mp3
+title=Вход И.Н.
+comment=none
+[N26]
+file=PPI 24.mp3
+title=«Не стану описывать кушания...»
+comment=none
+[N27]
+file=PPI 25.mp3
+title=Примирение
+comment=none
+[N28]
+file=PPI 26.mp3
+title=Катастрофа
+comment=none
+[N29]
+file=PPI 27.mp3
+title=«Целый месяц ничего не было...»
+comment=none
+[N30]
+file=PPI 28.mp3
+title=Дождь
+comment=none
+repeat=1
+[N31]
+file=PPI 29.mp3
+title=Финал
+comment=none
+[N32]
+file=PPI 30.mp3
+title=Уход Автора-2
+comment=none
+[Desk 1 Numbers]
+PPI 01=1
+PPI 02=2
+PPI 03=4
+PPI 04=5
+PPI 05=6
+PPI 09=10
+PPI 11=12
+PPI 13=14
+PPI 14=15
+PPI 16=17
+PPI 16a=17
+PPI 17=18
+PPI 19=20
+PPI 21=22
+PPI 21a=23
+PPI 23=25
+PPI 25=27
+PPI 27=29
+PPI 29=31
+[Desk 2 Numbers]
+PPI 02a=3
+PPI 06=7
+PPI 07=8
+PPI 08=9
+PPI 10=11
+PPI 12=13
+PPI 15=16
+PPI 18=19
+PPI 20=21
+PPI 22=24
+PPI 24=26
+PPI 26=28
+PPI 28=30
+PPI 30=32

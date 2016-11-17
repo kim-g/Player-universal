@@ -1,0 +1,354 @@
+[General]
+program=StD Player
+files=57
+name=Проба пера – 99   
+[Desk 1 Parameters]
+directory=d:\Music\ПП-99
+[Desk 2 Parameters]
+directory=d:\Music\ПП-99
+[N1]
+file=PP-01.mp3
+title=ТЕНЬ-1 – Увертюра
+comment=none
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+11=11
+12=12
+13=13
+14=14
+15=15
+16=16
+17=17
+18=18
+19=19
+20=20
+21=21
+22=22
+23=23
+24=24
+25=25
+26=26
+27=27
+28=28
+29=29
+30=30
+31=31
+32=32
+33=33
+34=34
+35=35
+36=36
+37=37
+38=38
+39=39
+40=40
+41=41
+42=42
+43=43
+44=44
+45=45
+46=46
+47=47
+48=48
+49=49
+50=50
+51=51
+52=52
+53=53
+54=54
+55=55
+56=56
+57=57
+[N2]
+file=PP-02.mp3
+title=ТЕНЬ-1 – Улица
+comment=none
+[N3]
+file=PP-02a.mp3
+title=ТЕНЬ-1 – Толпа
+comment=none
+[N4]
+file=PP-02b.mp3
+title=ТЕНЬ-1 – Разбитое стекло
+comment=none
+[N5]
+file=PP-02c.mp3
+title=ТЕНЬ-1 – Тема
+comment=none
+[N6]
+file=PP-03.mp3
+title=ТЕНЬ-1 – Тема
+comment=none
+[N7]
+file=PP-04.mp3
+title=ПД – Вьюга с текстом
+comment=none
+[N8]
+file=PP-05.mp3
+title=ПД – Подъезд лошадей
+comment=none
+[N9]
+file=PP-06.mp3
+title=ПД – Вьюга – Дантес
+comment=none
+[N10]
+file=PP-07.mp3
+title=ПД – Бой часов
+comment=none
+[N11]
+file=PP-08.mp3
+title=ПД – Вьюга
+comment=none
+[N12]
+file=PP-08a.mp3
+title=ПД – Выстрел
+comment=none
+[N13]
+file=PP-09.mp3
+title=ТЕНЬ-2 – Тема
+comment=none
+[N14]
+file=PP-09a.mp3
+title=ТЕНЬ-2 – Текст-комментарий
+comment=none
+[N15]
+file=PP-10.mp3
+title=ТЕНЬ-2 – Музыка в ресторане
+comment=none
+[N16]
+file=PP-11.mp3
+title=ТЕНЬ-2 – Тема
+comment=none
+[N17]
+file=PP-11a.mp3
+title=КГ – Вступление
+comment=none
+[N18]
+file=PP-12.mp3
+title=КГ – Фоливайдер
+comment=none
+[N19]
+file=PP-12a.mp3
+title=КГ – Фоливайдер
+comment=none
+[N20]
+file=PP-13.mp3
+title=КГ – Шаги Командора
+comment=none
+[N21]
+file=PP-13a.mp3
+title=КГ – Командор
+comment=none
+[N22]
+file=PP-14.mp3
+title=КГ – Финал – Грохот
+comment=none
+[N23]
+file=PP-14a.mp3
+title=КГ – Эхо вступления
+comment=none
+[N24]
+file=PP-15.mp3
+title=МвоД – Проигрыш
+comment=none
+[N25]
+file=PP-15a.mp3
+title=МвоД – Концовка проигрыша
+comment=none
+[N26]
+file=PP-16.mp3
+title=МвоД – Проигрыш
+comment=none
+[N27]
+file=PP-17.mp3
+title=МвоД – Проигрыш
+comment=none
+[N28]
+file=PP-18.mp3
+title=МАКБЕТ – Шорохи
+comment=none
+[N29]
+file=PP-19.mp3
+title=МАКБЕТ – Шорохи
+comment=none
+[N30]
+file=PP-20.mp3
+title=МАКБЕТ – Шорохи
+comment=none
+[N31]
+file=PP-21.mp3
+title=МАКБЕТ – Вороны – Шорохи
+comment=none
+[N32]
+file=PP-22.mp3
+title=МАКБЕТ – Фанфары
+comment=none
+[N33]
+file=PP-23.mp3
+title=МАКБЕТ – Шорохи замедленные
+comment=none
+[N34]
+file=PP-24.mp3
+title=МАКБЕТ – Шорохи замедленные
+comment=none
+[N35]
+file=PP-25.mp3
+title=МАКБЕТ – Шорохи замедленные
+comment=none
+[N36]
+file=PP-26.mp3
+title=МАКБЕТ – Сова и шорохи
+comment=none
+[N37]
+file=PP-27.mp3
+title=МАКБЕТ – Шорохи
+comment=none
+[N38]
+file=PP-28.mp3
+title=МАКБЕТ – Финал
+comment=none
+[N39]
+file=PP-29.mp3
+title=РКМ – Увертюра
+comment=none
+[N40]
+file=PP-29a.mp3
+title=РКМ – Концовка увертюры
+comment=none
+[N41]
+file=PP-30.mp3
+title=РКМ – Проигрыш убыстренный
+comment=none
+[N42]
+file=PP-31.mp3
+title=РКМ – Проигрыш убыстренный
+comment=none
+[N43]
+file=PP-32.mp3
+title=РКМ – Интермедия
+comment=none
+[N44]
+file=PP-33.mp3
+title=РКМ – Финал
+comment=none
+[N45]
+file=PP-34.mp3
+title=РКМ – Проигрыш полный
+comment=none
+[N46]
+file=PP-35.mp3
+title=ОЧ – Ветер
+comment=none
+repeat=1
+[N47]
+file=PP-35a.mp3
+title=ОЧ – Колокольчик + стук + Ветер
+comment=none
+[N48]
+file=PP-35b.mp3
+title=ОЧ – Ветер с лирической
+comment=none
+[N49]
+file=PP-36.mp3
+title=ОЧ – Лирическая
+comment=none
+[N50]
+file=PP-37.mp3
+title=АКК. – Вступление
+comment=none
+[N51]
+file=PP-38.mp3
+title=АКК. – Аплодисменты
+comment=none
+[N52]
+file=PP-39.mp3
+title=АКК. – Финал – Паулс
+comment=none
+[N53]
+file=PP-40.mp3
+title=Р – Интермедия
+comment=none
+[N54]
+file=PP-41.mp3
+title=Р – Проигрыш
+comment=none
+[N55]
+file=PP-41a.mp3
+title=Р – Проигрыш – Городничий
+comment=none
+[N56]
+file=PP-42.mp3
+title=Р – Финал
+comment=none
+[N57]
+file=PP-43.mp3
+title=ПОКЛОН – Паулс
+comment=none
+[Desk 1 Numbers]
+ПП 1=1
+ПП 2=2
+ПП 2b=4
+ПП 2c=5
+ПП 4=7
+ПП 5=8
+ПП 6=9
+ПП 8=11
+ПП 9=13
+ПП 10=15
+ПП 11=16
+ПП 12=18
+ПП 12a=19
+ПП 13=20
+ПП 14=22
+ПП 15=24
+ПП 16=26
+ПП 17=27
+ПП 18=28
+ПП 20=30
+ПП 22=32
+ПП 23=33
+ПП 24=34
+ПП 25=35
+ПП 27=37
+ПП 28=38
+ПП 29=39
+ПП 30=41
+ПП 21=42
+ПП 32=43
+ПП 33=44
+ПП 35=46
+ПП 35a=47
+ПП 35b=48
+ПП 36=49
+ПП 37=50
+ПП 39=52
+ПП 40=53
+ПП 41=54
+ПП 41a=55
+ПП 42=56
+[Desk 2 Numbers]
+ПП 2a=3
+ПП 3=6
+ПП 7=10
+ПП 8a=12
+ПП 9a=14
+ПП 11a=17
+ПП 13a=21
+ПП 14a=23
+ПП 15a=25
+ПП 19=29
+ПП 21=31
+ПП 26=36
+ПП 29a=40
+ПП 34=45
+ПП 38=51
+ПП 43=57

@@ -1,0 +1,61 @@
+[General]
+name=Тестовый файл
+description=Тестовый файл для нового плеера StD Player
+program=StD Player
+[Desk 1 Parameters]
+directory=G:\Диск фестивалей\2013 - Гора Олимп
+[Desk 1 Numbers]
+1
+3
+4
+6
+10
+[Desk 2 Parameters]
+directory=G:\Диск фестивалей\2013 - Гора Олимп
+[Desk 2 Numbers]
+2
+5
+7
+8
+9
+[N1]
+file=GladOS.mp3
+title=Аранжировка песни GladOS
+comment=none
+[N2]
+file=StarWars-Sith.mp3
+title=Появление ситха
+comment=none
+[N3]
+file=Saundtrek_Kalambur_-_Krutoe_pike_(iPlayer.fm).mp3
+title=Крутое пике
+comment=none
+[N4]
+file=Дождь.mp3
+title=Дождь
+comment=none
+[N5]
+file=StarWars.mp3
+title=Звёздные войны
+comment=none
+[N6]
+file=Мендельсон.mp3
+title=Скрипичный концерт Медельсона
+comment=none
+[N7]
+file=Terminator 2.mp3
+title=Терминатор 2
+comment=none
+[N8]
+file=Лето.mp3
+title=Вивальди. Лето. Часть 3
+comment=none
+[N9]
+file=Нормальные герои.mp3
+title=Нормальные герои
+comment=none
+[N10]
+file=kaptainpolka.mp3
+title=Капитанская полька World of Goo
+comment=none
+repeat=true

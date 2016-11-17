@@ -1,0 +1,46 @@
+[General]
+program=StD Player
+name=Тест
+description=Тест создания INI файла
+files=3
+
+[Files List]
+1=1
+2=2
+3=3
+
+[Desk 1 Parameters]
+directory=D:\Театр\Music
+
+[Desk 2 Parameters]
+directory=D:\Театр\Music
+
+[Desk 1 Numbers]
+T1=1
+T1a=1
+T5=3
+T3=2
+T7=1
+T8=2
+
+[Desk 2 Numbers]
+T2=2
+T4=1
+T6=3
+T9=1
+
+[N1]
+file=GladOS.mp3
+title=Аранжировка песни GladOS
+comment=none
+
+[N2]
+file=StarWars-Sith.mp3
+title=Появление ситха
+comment=none
+
+[N3]
+file=kaptainpolka.mp3
+title=WOG – Капитанская полька
+comment=none
+repeat=1

@@ -1,0 +1,101 @@
+[General]
+name=Тестовый файл
+description=Тестовый файл для нового плеера StD Player
+program=StD Player
+files=10
+
+[Files List]
+1=1
+2=2
+3=3
+4=4
+5=5
+6=6
+7=7
+8=8
+9=9
+10=10
+
+[Desk 1 Parameters]
+directory=D:\Театр\Music
+
+[Desk 1 Numbers]
+N1=1
+N3=3
+N4=4
+N6=6
+N10=10
+
+[Desk 2 Parameters]
+directory=D:\Театр\Music
+
+[Desk 2 Numbers]
+N2=2
+N5=5
+N7=7
+N8=8
+N9=9
+
+[N1]
+file=GladOS.mp3
+title=Аранжировка песни GladOS
+comment=none
+
+[N2]
+file=StarWars-Sith.mp3
+title=Появление ситха
+comment=none
+
+[N3]
+file=KP.mp3
+title=Крутое пике
+comment=none
+
+[N4]
+file=Дождь.mp3
+title=Дождь
+comment=none
+
+[N5]
+file=StarWars.mp3
+title=Звёздные войны
+comment=none
+
+[N6]
+file=Мендельсон.mp3
+title=Скрипичный концерт Медельсона
+comment=none
+
+[N7]
+file=Terminator 2.mp3
+title=Терминатор 2
+comment=none
+
+[N8]
+file=Лето.mp3
+title=Вивальди. Лето. Часть 3
+comment=none
+
+[N9]
+file=Нормальные герои.mp3
+title=Нормальные герои
+comment=none
+
+[N10]
+file=kaptainpolka.mp3
+title=Капитанская полька WoG
+comment=none
+repeat=1
+
+[fx]
+80Hz=15
+170Hz=16
+310Hz=15
+600Hz=15
+1000Hz=15
+3000Hz=15
+6000Hz=15
+10000Hz=15
+12000Hz=15
+14000Hz=15
+
