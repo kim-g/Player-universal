@@ -2,7 +2,7 @@ object Form2: TForm2
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1086#1088' '#1089#1087#1080#1089#1082#1086#1074' '#1090#1088#1077#1082#1086#1074'.'
-  ClientHeight = 505
+  ClientHeight = 722
   ClientWidth = 896
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,24 +17,25 @@ object Form2: TForm2
   TextHeight = 19
   object Splitter1: TSplitter
     Left = 557
-    Top = 81
-    Height = 424
+    Top = 124
+    Height = 598
     ExplicitLeft = 456
     ExplicitTop = 224
     ExplicitHeight = 100
   end
   object Splitter2: TSplitter
     Left = 369
-    Top = 81
-    Height = 424
+    Top = 124
+    Height = 598
     ExplicitLeft = 360
     ExplicitTop = 87
+    ExplicitHeight = 424
   end
   object Panel1: TPanel
     Left = 0
-    Top = 81
+    Top = 124
     Width = 369
-    Height = 424
+    Height = 598
     Align = alLeft
     BorderWidth = 10
     TabOrder = 0
@@ -43,7 +44,7 @@ object Form2: TForm2
       Left = 11
       Top = 49
       Width = 317
-      Height = 364
+      Height = 538
       Align = alClient
       DragMode = dmAutomatic
       ItemHeight = 19
@@ -81,7 +82,7 @@ object Form2: TForm2
       Left = 328
       Top = 49
       Width = 30
-      Height = 364
+      Height = 538
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
@@ -380,9 +381,9 @@ object Form2: TForm2
   end
   object Panel2: TPanel
     Left = 560
-    Top = 81
+    Top = 124
     Width = 336
-    Height = 424
+    Height = 598
     Align = alClient
     BorderWidth = 10
     TabOrder = 1
@@ -391,7 +392,7 @@ object Form2: TForm2
       Left = 11
       Top = 49
       Width = 284
-      Height = 364
+      Height = 538
       Align = alClient
       DragMode = dmAutomatic
       ItemHeight = 19
@@ -429,7 +430,7 @@ object Form2: TForm2
       Left = 295
       Top = 49
       Width = 30
-      Height = 364
+      Height = 538
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
@@ -730,7 +731,7 @@ object Form2: TForm2
     Left = 0
     Top = 0
     Width = 896
-    Height = 81
+    Height = 124
     Align = alTop
     TabOrder = 2
     object Label1: TLabel
@@ -763,12 +764,21 @@ object Form2: TForm2
       TabOrder = 1
       OnChange = Edit2Change
     end
+    object Button1: TButton
+      Left = 11
+      Top = 80
+      Width = 126
+      Height = 38
+      Caption = 'Save to DB'
+      TabOrder = 2
+      OnClick = Button1Click
+    end
   end
   object Panel6: TPanel
     Left = 372
-    Top = 81
+    Top = 124
     Width = 185
-    Height = 424
+    Height = 598
     Align = alLeft
     BorderWidth = 10
     TabOrder = 3
@@ -777,7 +787,7 @@ object Form2: TForm2
       Left = 11
       Top = 11
       Width = 163
-      Height = 402
+      Height = 576
       Align = alClient
       DragMode = dmAutomatic
       ItemHeight = 19
@@ -787,7 +797,7 @@ object Form2: TForm2
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'spl'
-    Filter = #1057#1087#1080#1089#1086#1082' '#1090#1088#1077#1082#1086#1074' '#1076#1083#1103' '#1089#1087#1077#1082#1090#1072#1082#1083#1103' (*.spl)|*.spl'
+    Filter = #1060#1072#1081#1083' '#1084#1091#1079#1099#1082#1080' '#1076#1083#1103' '#1089#1087#1077#1082#1090#1072#1082#1083#1103' (*.sdb)|*.spl'
     Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Title = #1054#1090#1082#1088#1099#1090#1100' '#1080#1083#1080' '#1089#1086#1079#1076#1072#1090#1100' '#1092#1072#1081#1083' spl'
     Left = 56

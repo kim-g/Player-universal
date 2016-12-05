@@ -2,6 +2,7 @@
 name=Тестовый файл
 description=Тестовый файл для нового плеера StD Player
 program=StD Player
+files=0
 [Desk 1 Parameters]
 directory=G:\Диск фестивалей\2013 - Гора Олимп
 [Desk 1 Numbers]

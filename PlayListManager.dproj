@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>PlayListManager.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -93,6 +93,9 @@
             <Form>NTrackForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="SQLite3.pas"/>
+        <DCCReference Include="SQLiteTable3.pas"/>
+        <DCCReference Include="SQL_Const.pas"/>
         <None Include="ModelSupport_PlayListManager\PlayListManager\default.txaPackage"/>
         <None Include="ModelSupport_PlayListManager\default.txaPackage"/>
         <None Include="ModelSupport_PlayListManager\PlayListManager\default.txvpck"/>

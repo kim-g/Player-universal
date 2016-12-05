@@ -4,7 +4,10 @@ uses
   Vcl.Forms,
   PlayListUnit in 'PlayListUnit.pas' {Form2},
   FilePropUnit in 'FilePropUnit.pas' {FileProp},
-  NTrackUnit in 'NTrackUnit.pas' {NTrackForm};
+  NTrackUnit in 'NTrackUnit.pas' {NTrackForm},
+  SQLite3 in 'SQLite3.pas',
+  SQLiteTable3 in 'SQLiteTable3.pas',
+  SQL_Const in 'SQL_Const.pas';
 
 {$R *.res}
 

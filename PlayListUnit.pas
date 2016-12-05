@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, ShellAPI, Vcl.ExtCtrls, INIFiles,
-  Vcl.Buttons, math;
+  Vcl.Buttons, math, SQLite3, SQLiteTable3, SQL_Const;
 
 type
   TForm2 = class(TForm)
@@ -37,6 +37,7 @@ type
     SpeedButton6: TSpeedButton;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure AppMessage(var Msg: TMsg; var Handled: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -51,6 +52,7 @@ type
     procedure ListBox3DblClick(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     procedure WMDropFiles (hDrop : THandle; hWindow : HWnd);
     Function PointInComponent(Component:TControl; Point:TPoint):boolean;
@@ -66,6 +68,8 @@ var
   FList:array[1..2] of TStringList;
   GeneralFileList: TStringList;
   ListBox: array [1..3] of TListBox;
+  FileName: string;
+  DB: TSQLiteDatabase;
 
 const
   PN_Standart = 'StD Player';
@@ -126,6 +130,24 @@ case Msg.Message of
 end;
 end;
 
+procedure TForm2.Button1Click(Sender: TObject);
+var
+
+  Table: TSQLIteTable;
+  MS: TStream;
+begin
+  DB := TSQLiteDatabase.Create(ExtractFilepath(application.exename) + 'TestMy.db');
+
+  DB.ExecSQL(DB_Create_INFO);
+  DB.ExecSQL(DB_Create_FILES);
+  DB.ExecSQL(DB_Create_DESK);
+
+  DB.ExecSQL('INSERT INTO `files` (`Title`, `comment`, `cycle`) VALUES ("TestFile", "Тестовый файл", 0)');
+  MS := TFileStream.Create('Music.mp3', fmOpenRead);
+  DB.UpdateBlob('UPDATE `files` SET `file` = ? WHERE `id` = last_insert_rowid()', MS);
+
+end;
+
 procedure TForm2.Edit1Change(Sender: TObject);
 begin
 List.WriteString('General','name',Edit1.Text);
@@ -157,6 +179,8 @@ var
 begin
 if not SaveDialog1.Execute then
   Application.Terminate;
+
+FileName := SaveDialog1.FileName;
 
 FE:=FileExists(SaveDialog1.FileName);
 List:=TINIFile.Create(SaveDialog1.FileName);
