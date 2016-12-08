@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.MPlayer,
   Vcl.ComCtrls, IniFiles, Vcl.Buttons, MMSystem, bass, pngimage, ShlObj,
-  Vcl.Samples.Spin, ShellApi, math, SQLiteTable3;
+  Vcl.Samples.Spin, ShellApi, math,SQLite3, SQLiteTable3, BassCore;
 
 type
   TPlayerMode = (pmStop, pmPlay, pmPaused);
@@ -16,7 +16,7 @@ TFile = record
   Title: string;
   Comment: string;
   Cycle: Boolean;
-  Info: TStream;
+  Info: TMemoryStream;
 end;
 
   TBass = record
@@ -95,8 +95,8 @@ end;
     Track_Image1: TPaintBox;
     Track_Image2: TPaintBox;
     procedure FormCreate(Sender: TObject);
-    procedure SetMusic(Capt:TLabel;Timer:TLabel;Length:TLabel;
-      var Desk:TBass;StringList:TStringList;DeskN:Byte; RepeatImage: TImage; TrackImage:TPaintBox);
+    procedure SetMusic(Capt, Timer, Length: TLabel;
+  var Desk: TBass; StringList, TitleList: TStringList; DeskN: Byte; RepeatImage: TImage; TrackImage:TPaintBox);
     procedure SetMusicDesk1;
     procedure SetMusicDesk2;
     procedure SetMusicDesk(DeskN:byte);
@@ -193,6 +193,8 @@ var
   Scale: Single = 1;
   XPadding, YPadding: integer;
 
+  PMS: PMemoryStream;
+
 
 const
   DEBUG = false;
@@ -284,6 +286,8 @@ begin
   SEList[2].SE2 := SpinEdit4;
   DeskPanel[1] := Panel7;
   DeskPanel[2] := Panel8;
+  Desk_Bass[1].Bass := TBASSCorePlayer.Create(Handle);
+  Desk_Bass[2].Bass := TBASSCorePlayer.Create(Handle);
 end;
 
 procedure TForm1.CheckStatus(Desk: TBass; DeskN: Byte);       //Проверка статуса
@@ -292,8 +296,8 @@ var
 begin
 if Desk.mode=pmPlay then                                      // Если плеер играет
   begin
-  Pos:=BASS_ChannelGetPosition(Desk.Channel,0);               // Получить текущую позицию
-  Len:=BASS_ChannelGetLength(Desk.Channel,0);                 // ... и общую длину трека
+  Pos:=BASS_ChannelGetPosition(Desk.Bass.GetChannel,0);               // Получить текущую позицию
+  Len:=BASS_ChannelGetLength(Desk.Bass.GetChannel,0);                 // ... и общую длину трека
   if Pos>=Len then                                            // Если трек кончился
     if Desk.RepeatSound then                                  // Если трек зациклен
       begin
@@ -313,13 +317,13 @@ var
   smin,ssec,Temp:string;
   bmin,bsec:Integer;
 begin
-PosB:=BASS_ChannelGetPosition(Desk_Bass[NDesk].Channel, 0);                      // Получить текущую позицию
+PosB:=BASS_ChannelGetPosition(Desk_Bass[NDesk].Bass.GetChannel, 0);                      // Получить текущую позицию
 
 // Нарисовать треки
 DrawTrack(Desk_Bass[NDesk], NDesk, Track_Image, Track_Panel);
 
 // Поставить текущее время
-Pos:=BASS_ChannelBytes2Seconds(Desk.Channel, PosB);
+Pos:=BASS_ChannelBytes2Seconds(Desk.Bass.GetChannel, PosB);
 bmin := round(Pos) div 60;
 if bmin < 10 then smin:='0'+IntToStr(bmin) else smin:=IntToStr(bmin);
 bsec := round(Pos - bmin * 60);
@@ -342,9 +346,9 @@ begin
 Row.Canvas.Brush.Color:=IndBackColor;
 Row.Canvas.Rectangle(0,0,Row.Width,Row.Height);
 //проверяем если канал не активный, то выходим
-if BASS_ChannelIsActive(Desk.Channel)<>BASS_Active_Playing then  exit;
+if BASS_ChannelIsActive(Desk.Bass.GetChannel)<>BASS_Active_Playing then  exit;
 //получаем уровень сигнала
-level:=BASS_ChannelGetLevel(Desk.Channel);
+level:=BASS_ChannelGetLevel(Desk.Bass.GetChannel);
 // уровень левого канала возвращен в низком слове (низкие 16 битов),
 // и уровень правого канала возвращен в высоком слове (высокие 16 битов).
 LR[-1]:=LoWord(level);
@@ -461,8 +465,8 @@ var
   FullRect, FillR, DiffRect: TRect;
   I: Integer;
 begin
-PosB:=BASS_ChannelGetPosition(Desk.Channel, 0);                      // Получить текущую позицию
-LengthB := BASS_ChannelGetLength(Desk.Channel, 0);
+PosB:=BASS_ChannelGetPosition(Desk.Bass.GetChannel, 0);                      // Получить текущую позицию
+LengthB := BASS_ChannelGetLength(Desk.Bass.GetChannel, 0);
 if Track_Clicked[NDesk] then
   begin
   T_Position := round( PosB / LengthB * Image.Width );
@@ -535,7 +539,7 @@ Image.Canvas.Pen.Color := IndLabColor;
 if Desk.LabelList.Count = 0 then Exit;
 for I := 0 to Desk.LabelList.Count - 1 do
   begin
-  PosB:=BASS_ChannelSeconds2Bytes(desk.Channel,StrToInt(Desk.LabelList[I]));
+  PosB:=BASS_ChannelSeconds2Bytes(desk.Bass.GetChannel,StrToInt(Desk.LabelList[I]));
   T_Position := round(Image.Width * PosB / LengthB );
   with Image.Canvas do
     begin
@@ -664,9 +668,10 @@ end;
 
 function TForm1.GetFile(id: Integer): TFile;
 var
-  I: Integer;
+  I, L: Integer;
 begin
-for I := 0 to Length(Files) do
+L := Length(Files);
+for I := 0 to L - 1 do
   if Files[i].id = id then Result := Files[i];
 end;
 
@@ -779,7 +784,7 @@ end;
 
 procedure TForm1.LoadSPL(FileName: string);
 
-  procedure AddList(StringList, TitleList:TStringList;DeskN:Byte; DB: TSQLiteDataBase);
+  procedure AddList(var StringList, TitleList:TStringList;DeskN:Byte; DB: TSQLiteDataBase);
   var
     i:integer;
     Table: TSQLiteTable;
@@ -794,9 +799,10 @@ procedure TForm1.LoadSPL(FileName: string);
       begin
       StringList.Values[Table.FieldAsString(1)] := Table.FieldAsString(2);
       if Table.FieldAsString(3) = ''
-        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(0))
+        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(0)).Title
         else TitleList.Values[Table.FieldAsString(1)] := Table.FieldAsString(3);
       ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + TitleList.Values[Table.FieldAsString(1)]);
+      Table.Next;
       end;
 
     ListBoxItemSelected[DeskN]:=0;
@@ -812,7 +818,8 @@ begin
 FTP.Free;
 
 // Загрузка БД
-DB := TSQLiteDataBase(FileName);
+DB := TSQLiteDatabase.Create(FileName);
+
 Table := DB.GetTable('SELECT * FROM `info`');
 
 // Проверим, та ли это база
@@ -830,11 +837,11 @@ Label10.Caption := Table.FieldAsString(Table.FieldIndex['name']);
 
 //Настройка эквалайзера    Применить - UpdateFile
 for I := 1 to 10 do
-  Tracks[i].Position := FTP.ReadInteger('fx', IntToStr(TrackValuesHz[i])+'Hz',15);
+  Tracks[i].Position := 15; //FTP.ReadInteger('fx', IntToStr(TrackValuesHz[i])+'Hz',15);
 
 // Загрузка записей в память.
   //Files
-Table := DB.GetTable('SELECT `id`, `title`, `comment`, `cycle`, `file`');
+Table := DB.GetTable('SELECT `id`, `title`, `comment`, `cycle`, `file` FROM `files`');
 SetLength(Files, Table.Count);
 for I := 0 to Table.Count - 1 do
   begin
@@ -843,31 +850,14 @@ for I := 0 to Table.Count - 1 do
   Files[i].Comment := Table.FieldAsString(2);
   Files[i].Cycle := Table.FieldAsInteger(3) = 1;
   Files[i].Info := Table.FieldAsBlob(4);
+
+  Table.Next;
   end;
 
 AddList(Desk1_List, Desk1_Title, 1, DB);
 AddList(Desk2_List, Desk2_Title, 2, DB);
 SetMusicDesk1;
 SetMusicDesk2;
-
-{
-FTP:=TMemINIFile.Create(FileName);
-if FTP.ReadString('General','program','ERROR')<>'StD Player' then
-    begin
-    Label10.Caption:='Ошибка - файл другого формата';
-    exit;
-    end;
-
-Label10.Caption:=FTP.ReadString('General','name','ERROR').ToUpperInvariant;
-
-//Настройка эквалайзера    Применить - UpdateFile
-for I := 1 to 10 do
-  Tracks[i].Position := FTP.ReadInteger('fx', IntToStr(TrackValuesHz[i])+'Hz',15);
-
-AddList(Desk1_List,1);
-AddList(Desk2_List,2);
-SetMusicDesk1;
-SetMusicDesk2;       }
 
 Config.WriteString('start options','file',FileName);
 end;
@@ -888,7 +878,7 @@ if SEList[DeskN].SE1.Visible then
 case Desk_Bass[DeskN].mode of
 pmplay:
   begin
-  if not BASS_ChannelPause(Desk_Bass[DeskN].Channel) then
+  if not BASS_ChannelPause(Desk_Bass[DeskN].Bass.GetChannel) then
 			begin
       ShowMessage('Ошибка воспроизведения файла');
       exit;
@@ -898,7 +888,7 @@ pmplay:
   end;
 pmpaused, pmstop:
   begin
-  if not BASS_ChannelPlay(Desk_Bass[DeskN].Channel,False) then
+  if not BASS_ChannelPlay(Desk_Bass[DeskN].Bass.GetChannel,False) then
 			begin
       ShowMessage('Ошибка воспроизведения файла');
       exit;
@@ -921,7 +911,7 @@ if SEList[DeskN].SE1.Visible then
 
   //Загрузка положений эквалайзера
 for I := 1 to 10 do
-  Desk_Bass[DeskN].fx[i]:=BASS_ChannelSetFX(Desk_Bass[DeskN].Channel, BASS_FX_DX8_PARAMEQ, 1);
+  Desk_Bass[DeskN].fx[i]:=BASS_ChannelSetFX(Desk_Bass[DeskN].Bass.GetChannel, BASS_FX_DX8_PARAMEQ, 1);
 
 for I := 1 to 10 do
   begin
@@ -931,7 +921,7 @@ for I := 1 to 10 do
   BASS_FXSetParameters(Desk_Bass[DeskN].fx[i], @Desk_Bass[DeskN].p);//применение заданных настроек
   end;
 
-if not BASS_ChannelPlay(Desk_Bass[DeskN].Channel, False) then
+if not BASS_ChannelPlay(Desk_Bass[DeskN].Bass.GetChannel, False) then
 			begin ShowMessage('Ошибка воспроизведения файла');exit;end;
 Desk_Bass[DeskN].mode:=pmplay;
 end;
@@ -1025,7 +1015,7 @@ procedure TForm1.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
   var ScrollPos: Integer);
 begin
 UpdateTimer.Enabled:=false;
-BASS_ChannelSetPosition(Desk_Bass[TComponent(Sender).Tag].Channel,
+BASS_ChannelSetPosition(Desk_Bass[TComponent(Sender).Tag].Bass.GetChannel,
   TScrollBar(Sender).Position,0);
 UpdateTimer.Enabled:=true;
 end;
@@ -1042,9 +1032,9 @@ if round(Desk_bass[DeskN].MaxSec) < ((SEList[SEN].SE1.Value * 60) + SEList[SEN].
   end;
 
 Pos:=SEList[SEN].SE1.Value*60 + SEList[SEN].SE2.Value;
-PosB:=BASS_ChannelSeconds2Bytes(desk_bass[DeskN].Channel,Pos);
+PosB:=BASS_ChannelSeconds2Bytes(desk_bass[DeskN].Bass.GetChannel,Pos);
 
-BASS_ChannelSetPosition(desk_bass[DeskN].Channel,PosB,0);
+BASS_ChannelSetPosition(desk_bass[DeskN].Bass.GetChannel,PosB,0);
 
 end;
 
@@ -1056,8 +1046,8 @@ var
 begin
 if desk_bass[DeskN].mode=pmPlay then Pause(DeskN);
 
-PosB:=BASS_ChannelGetPosition(desk_bass[DeskN].Channel, 0);
-Pos:=BASS_ChannelBytes2Seconds(desk_bass[DeskN].Channel, PosB);
+PosB:=BASS_ChannelGetPosition(desk_bass[DeskN].Bass.GetChannel, 0);
+Pos:=BASS_ChannelBytes2Seconds(desk_bass[DeskN].Bass.GetChannel, PosB);
 bmin := round(Pos) div 60;
 bsec := round(Pos - bmin * 60);
 
@@ -1090,28 +1080,25 @@ var
   secAll:Double;
   PNG:TPNGImage;
   i: Integer;
+  TempFile: TFile;
 begin
 
-BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
+BASS_ChannelStop(Desk.Bass.GetChannel); BASS_StreamFree(Desk.Bass.GetChannel);   //освобождение от предыдущих записей.
 
 if DEBUG then ShowMessage('Call MusicAddress()');
+
+// Загрузка музыки
+TempFile :=  GetFile(StrToInt(StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]]));
+Desk.Bass.AssignStream(TempFile.Info);
 {Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
   FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');  }
 
-//пытаемся загрузить файл и получить дескриптор канала
-Desk.Channel := BASS_StreamCreateFile(FALSE, PChar(FileName), 0, 0, 0 {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-//если дескриптор канала=0 (файл по какой то причине не может быть загружен),
-//выдаем сообщение об ошибке и выходим
-if Desk.Channel=0 then
-  begin ShowMessage('Ошибка загрузки Файла');
-  exit;
-  end;
 
-BASS_ChannelSetAttribute(Desk.Channel,BASS_ATTRIB_PAN,Desk.Balance);
+BASS_ChannelSetAttribute(Desk.Bass.GetChannel,BASS_ATTRIB_PAN,Desk.Balance);
 
-Len:=BASS_ChannelGetLength(Desk.Channel, 0);
+Len:=BASS_ChannelGetLength(Desk.Bass.GetChannel, 0);
 
-secAll := BASS_ChannelBytes2Seconds(Desk.Channel,Len);
+secAll := BASS_ChannelBytes2Seconds(Desk.Bass.GetChannel,Len);
 Desk.MaxSec:=secAll;
 bmin := round(secAll) div 60;
 if bmin < 10 then smin:='0'+IntToStr(bmin) else smin:=IntToStr(bmin);
@@ -1119,22 +1106,22 @@ bsec := round(secAll - bmin * 60);
 if bsec < 10 then ssec:='0'+IntToStr(bsec) else ssec:=IntToStr(bsec);
 
 Length.Caption:=smin+':'+ssec;
-Capt.Caption:=StringList.Names[ListBoxItemSelected[DeskN]]+' – ' +
-  FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'title','Error');
+Capt.Caption:=StringList.Names[ListBoxItemSelected[DeskN]] + ' – ' +
+  TitleList.Values[IntToStr(ListBoxItemSelected[DeskN])];
 Timer.Caption:='00:00';
 
 Desk.mode:=pmstop;
 
 // Загрузка меток
 Desk.LabelList.Clear;
-i := 1;
+{i := 1;
 while FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End')<>'End' do
   begin
   Desk.LabelList.Add(FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End'));
   inc(i);
-  end;
+  end;  }
 
-if FTP.ReadBool('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'repeat',false) then
+if TempFile.Cycle then
   begin
   Desk.RepeatSound:=true;
   PNG:=TPNGImage.Create;
@@ -1161,12 +1148,12 @@ end;
 
 procedure TForm1.SetMusicDesk1;
 begin
-SetMusic(Label5,Label7,Label9,Desk_Bass[1],Desk1_List,1, Image2, Track_Image1);
+SetMusic(Label5,Label7,Label9,Desk_Bass[1],Desk1_List, Desk1_Title,1, Image2, Track_Image1);
 end;
 
 procedure TForm1.SetMusicDesk2;
 begin
-SetMusic(Label13,Label15,Label17,Desk_Bass[2],Desk2_List,2, Image5, Track_Image2);
+SetMusic(Label13,Label15,Label17,Desk_Bass[2],Desk2_List, Desk2_Title,2, Image5, Track_Image2);
 end;
 
 procedure TForm1.SetScreen(width,height:integer);
@@ -1214,9 +1201,9 @@ if SEList[DeskN].SE1.Visible then
   SEList[DeskN].SE1.Visible:=false;
   SEList[DeskN].SE2.Visible:=false;
   end;
-if not BASS_ChannelStop(Desk_Bass[DeskN].Channel) then
+if not BASS_ChannelStop(Desk_Bass[DeskN].Bass.GetChannel) then
 			begin ShowMessage('Ошибка воспроизведения файла');exit;end;
-if not BASS_ChannelSetPosition(Desk_Bass[DeskN].Channel,0,0) then
+if not BASS_ChannelSetPosition(Desk_Bass[DeskN].Bass.GetChannel,0,0) then
 			begin ShowMessage('Ошибка воспроизведения файла');exit;end;
 Desk_Bass[DeskN].mode:=pmstop;
 end;
@@ -1235,8 +1222,8 @@ Track_Pos[Image.Tag] := -1;
 Track_Clicked[Image.Tag] := true;
 Track_Mouse_pos[Image.Tag] := X;
 
-B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Channel, 0);
-B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Channel, 0);
+B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Bass.GetChannel, 0);
+B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Bass.GetChannel, 0);
 T_Position := round( B_Position / B_Length * Image.Width );
 
 FullRect.Left := 0;
@@ -1291,8 +1278,8 @@ if not Track_Clicked[Image.Tag] then Exit;
 
 Track_Mouse_pos[Image.Tag] := X;
 
-B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Channel, 0);
-B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Channel, 0);
+B_Length := Bass_ChannelGetLength(Desk_Bass[Image.Tag].Bass.GetChannel, 0);
+B_Position := Bass_ChannelGetPosition(Desk_Bass[Image.Tag].Bass.GetChannel, 0);
 T_Position := round( B_Position / B_Length * Image.Width );
 
 FullRect.Left := 0;
@@ -1339,10 +1326,10 @@ var
 begin
 Track_Pos[TComponent(Sender).Tag] := -1;
 
-B_Length := Bass_ChannelGetLength(Desk_Bass[TComponent(Sender).Tag].Channel, 0);
+B_Length := Bass_ChannelGetLength(Desk_Bass[TComponent(Sender).Tag].Bass.GetChannel, 0);
 B_Position := round(B_Length * X / TImage(Sender).Width);
 
-Bass_ChannelSetPosition(Desk_Bass[TComponent(Sender).Tag].Channel, B_Position, 0);
+Bass_ChannelSetPosition(Desk_Bass[TComponent(Sender).Tag].Bass.GetChannel, B_Position, 0);
 
 Track_Clicked[TComponent(Sender).Tag] := false;
 end;

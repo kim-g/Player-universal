@@ -10,7 +10,8 @@ uses
   Vcl.Styles,
   ChooseSp in 'ChooseSp.pas' {ChooseSpForm},
   SQLite3 in 'SQLite3.pas',
-  SQLiteTable3 in 'SQLiteTable3.pas';
+  SQLiteTable3 in 'SQLiteTable3.pas',
+  BassCore in 'BassCore.pas';
 
 {$R *.res}
 
