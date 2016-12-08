@@ -6,13 +6,22 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.MPlayer,
   Vcl.ComCtrls, IniFiles, Vcl.Buttons, MMSystem, bass, pngimage, ShlObj,
-  Vcl.Samples.Spin, ShellApi, math;
+  Vcl.Samples.Spin, ShellApi, math, SQLiteTable3;
 
 type
   TPlayerMode = (pmStop, pmPlay, pmPaused);
 
+TFile = record
+  id: Integer;
+  Title: string;
+  Comment: string;
+  Cycle: Boolean;
+  Info: TStream;
+end;
+
   TBass = record
     mode:TPlayerMode;
+    Bass: TBASSCorePlayer;
     Channel:DWORD;
     Balance:integer;
     RepeatSound:boolean;
@@ -135,6 +144,7 @@ type
       Y: Integer);
     procedure Image3Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    function GetFile(id: Integer):TFile;
   private
     MouseDown: boolean;
 
@@ -150,7 +160,6 @@ type
     { Public declarations }
   end;
 
-
 function ExeDir:string;
 function AppData:string;
 
@@ -164,7 +173,7 @@ var
   FTP:TMemINIFile;
   Config:TINIFile;
   ImagesDLL: THandle;
-  Desk1_List,Desk2_List:TStringList;
+  Desk1_List,Desk2_List,Desk1_Title,Desk2_Title:TStringList;
   Desk_bass:array[1..2] of TBass;
   SEList:array[1..2]of TSEList;
   DeskPanel:array [1..2] of TPanel;
@@ -176,6 +185,7 @@ var
   Track_Clicked: array [1..2] of Boolean = ( false, false );
   Track_Mouse_pos: array [1..2] of Integer;
   Track_Pos: array [1..2] of Integer = (-1, -1);
+  Files: array of TFile;
 
   DefWidth, DefHeight, BPP: word;{цвета, ширина, высота}
   DefFR:integer;{частота}
@@ -559,9 +569,6 @@ if ImagesDLL <= 32 then
   Application.Terminate;
   end;
 
-Desk1_List:=TStringList.Create;
-Desk2_List:=TStringList.Create;
-
 for I := 1 to 2 do
   ListBoxItems[i]:=TStringList.Create;
 ListBox[1]:=ListBox1;
@@ -653,6 +660,14 @@ case LowKey[1] of
   'o','щ': ListUp(2);                       //Вверх по списку
   ',','б': ListDown(2);                     //Вниз по списку
   end;
+end;
+
+function TForm1.GetFile(id: Integer): TFile;
+var
+  I: Integer;
+begin
+for I := 0 to Length(Files) do
+  if Files[i].id = id then Result := Files[i];
 end;
 
 procedure TForm1.Image3Click(Sender: TObject);
@@ -764,17 +779,26 @@ end;
 
 procedure TForm1.LoadSPL(FileName: string);
 
-  procedure AddList(StringList:TStringList;DeskN:Byte);
+  procedure AddList(StringList, TitleList:TStringList;DeskN:Byte; DB: TSQLiteDataBase);
   var
     i:integer;
+    Table: TSQLiteTable;
     begin
-    FTP.ReadSectionValues('Desk '+IntToStr(DeskN)+' Numbers',StringList);
-    ListBoxItems[DeskN].Clear;
-    for I := 0 to StringList.Count-1 do
+    Table := DB.GetTable('SELECT `id`, `number`, `file`, `title` FROM `desk` WHERE `desk_n` = ' + IntToStr(DeskN)
+      + ' ORDER BY `order`');
+
+    StringList := TStringList.Create;
+    TitleList := TStringList.Create;
+
+    for I := 0 to Table.Count - 1 do
       begin
-      ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + FTP.ReadString('N'+
-        StringList.Values[StringList.Names[i]],'title','ERROR'));
+      StringList.Values[Table.FieldAsString(1)] := Table.FieldAsString(2);
+      if Table.FieldAsString(3) = ''
+        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(0))
+        else TitleList.Values[Table.FieldAsString(1)] := Table.FieldAsString(3);
+      ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + TitleList.Values[Table.FieldAsString(1)]);
       end;
+
     ListBoxItemSelected[DeskN]:=0;
 
     DrawList(ListBox[DeskN],DeskN);
@@ -782,9 +806,51 @@ procedure TForm1.LoadSPL(FileName: string);
 
 var
   I: Integer;
-
+  DB: TSQLiteDataBase;
+  Table: TSQLiteTable;
 begin
 FTP.Free;
+
+// Загрузка БД
+DB := TSQLiteDataBase(FileName);
+Table := DB.GetTable('SELECT * FROM `info`');
+
+// Проверим, та ли это база
+if Table.Count = 0 then
+  begin
+  Label10.Caption := 'Ошибка - файл другого формата';
+  exit;
+  end;
+
+// Найдём последнюю запись
+for I := 1 to Table.Count - 1 do Table.Next;
+
+// Название из БД
+Label10.Caption := Table.FieldAsString(Table.FieldIndex['name']);
+
+//Настройка эквалайзера    Применить - UpdateFile
+for I := 1 to 10 do
+  Tracks[i].Position := FTP.ReadInteger('fx', IntToStr(TrackValuesHz[i])+'Hz',15);
+
+// Загрузка записей в память.
+  //Files
+Table := DB.GetTable('SELECT `id`, `title`, `comment`, `cycle`, `file`');
+SetLength(Files, Table.Count);
+for I := 0 to Table.Count - 1 do
+  begin
+  Files[i].id := Table.FieldAsInteger(0);
+  Files[i].Title := Table.FieldAsString(1);
+  Files[i].Comment := Table.FieldAsString(2);
+  Files[i].Cycle := Table.FieldAsInteger(3) = 1;
+  Files[i].Info := Table.FieldAsBlob(4);
+  end;
+
+AddList(Desk1_List, Desk1_Title, 1, DB);
+AddList(Desk2_List, Desk2_Title, 2, DB);
+SetMusicDesk1;
+SetMusicDesk2;
+
+{
 FTP:=TMemINIFile.Create(FileName);
 if FTP.ReadString('General','program','ERROR')<>'StD Player' then
     begin
@@ -801,7 +867,7 @@ for I := 1 to 10 do
 AddList(Desk1_List,1);
 AddList(Desk2_List,2);
 SetMusicDesk1;
-SetMusicDesk2;
+SetMusicDesk2;       }
 
 Config.WriteString('start options','file',FileName);
 end;
@@ -1015,7 +1081,7 @@ SEList[SEN].SE2.Visible:=true;
 end;
 
 procedure TForm1.SetMusic(Capt, Timer, Length: TLabel;
-  var Desk: TBass; StringList: TStringList; DeskN: Byte; RepeatImage: TImage; TrackImage:TPaintBox);
+  var Desk: TBass; StringList, TitleList: TStringList; DeskN: Byte; RepeatImage: TImage; TrackImage:TPaintBox);
 var
   smin,ssec:string;
   bmin,bsec:Integer;
@@ -1029,8 +1095,8 @@ begin
 BASS_ChannelStop(Desk.Channel); BASS_StreamFree(Desk.Channel);   //освобождение от предыдущих записей.
 
 if DEBUG then ShowMessage('Call MusicAddress()');
-Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
-  FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');
+{Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
+  FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');  }
 
 //пытаемся загрузить файл и получить дескриптор канала
 Desk.Channel := BASS_StreamCreateFile(FALSE, PChar(FileName), 0, 0, 0 {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});

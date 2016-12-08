@@ -38,6 +38,7 @@ type
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Button1: TButton;
+    Button2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure AppMessage(var Msg: TMsg; var Handled: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -53,11 +54,15 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     procedure WMDropFiles (hDrop : THandle; hWindow : HWnd);
     Function PointInComponent(Component:TControl; Point:TPoint):boolean;
     procedure ReadDesk(N:Byte; Edit:TEdit; ListBox:TListBox);
     procedure MoveRec(NDesk:byte; ListBox:TListbox; StartMv, EndMv:integer);
+    procedure InsertFile(NN, Title, Comment: string; Cycle: boolean;
+      FileName: string);
+    procedure InsertDeskToDB(DB_Num: byte);
   public
     { Public declarations }
   end;
@@ -70,6 +75,7 @@ var
   ListBox: array [1..3] of TListBox;
   FileName: string;
   DB: TSQLiteDatabase;
+  FilesNN: TStrings;
 
 const
   PN_Standart = 'StD Player';
@@ -135,17 +141,66 @@ var
 
   Table: TSQLIteTable;
   MS: TStream;
+  I, NList: Integer;
+  num, s: string;
+  N: Integer;
+  NewTitle: string;
 begin
-  DB := TSQLiteDatabase.Create(ExtractFilepath(application.exename) + 'TestMy.db');
+  DB := TSQLiteDatabase.Create(ExtractFilepath(FileName) + Edit1.Text + '.sdb');
 
   DB.ExecSQL(DB_Create_INFO);
   DB.ExecSQL(DB_Create_FILES);
   DB.ExecSQL(DB_Create_DESK);
 
-  DB.ExecSQL('INSERT INTO `files` (`Title`, `comment`, `cycle`) VALUES ("TestFile", "Тестовый файл", 0)');
-  MS := TFileStream.Create('Music.mp3', fmOpenRead);
-  DB.UpdateBlob('UPDATE `files` SET `file` = ? WHERE `id` = last_insert_rowid()', MS);
+  DB.ExecSQL('INSERT INTO `info` (`name`, `description`, `version`, `last_d_1`, `last_d_2`) VALUES ("' +
+    List.ReadString('General','name','') + '", "' + List.ReadString('General','description','') + '", 0, 0, 0)');
 
+  FilesNN := TStringList.Create;
+  Nlist:=List.ReadInteger('General','files',0);
+  if Nlist>0 then
+  for I := 1 to Nlist do
+    begin
+      num := List.ReadString('Files List', IntToStr(i), 'ERROR');
+      InsertFile('N'+num, List.ReadString('N'+num, 'title', 'NoName'),
+        List.ReadString('N'+num, 'comment', ''), List.ReadBool('N'+num, 'repeat', false),
+        ExtractFilepath(FileName) + List.ReadString('N'+num, 'file', ''));
+    end;
+
+  for N := 1 to 2 do
+    begin
+    s:='Desk '+IntToStr(N)+' Numbers';
+    List.ReadSectionValues(s,FList[N]);
+
+    if FList[N].Count>0 then
+      for I := 0 to FList[N].Count-1 do
+       begin
+       NewTitle := '';
+       DB.ExecSQL('INSERT INTO `desk` (`desk_n`, `number`, `file`, `title`, `order`) ' +
+         'VALUES (' + IntToStr(N) + ', "' + FList[N].Names[i] + '", ' +
+         FilesNN.Values['N' + FList[N].Values[FList[N].Names[i]]] +
+         ', "' + NewTitle + '", ' + IntToStr(I) + ')');
+       {
+       ListBox.Items.Add(FList[N].Names[i]+' – '+
+       List.ReadString('N'+FList[N].Values[FList[N].Names[i]], 'title', 'NoName')); }
+       end;
+    end;
+
+
+end;
+
+procedure TForm2.Button2Click(Sender: TObject);
+var
+  Table: TSQLiteTable;
+  I: Integer;
+begin
+  DB := TSQLiteDatabase.Create(ExtractFilepath(FileName) + Edit1.Text + '.sdb');
+
+  Table := DB.GetTable('SELECT `title` FROM `files`');
+  for I := 0 to Table.Count-1 do
+    begin
+    ShowMessage(Table.FieldAsString(0));       //Utf8ToAnsi(
+    Table.Next;
+    end;
 end;
 
 procedure TForm2.Edit1Change(Sender: TObject);
@@ -235,6 +290,47 @@ Application.OnMessage := AppMessage;
 { Вызываем DragAcceptFiles, чтобы сообщить менеджеру перетаскивания
 о том, что наша программа собирается принимать файлы. }
 DragAcceptFiles (Handle, True);
+end;
+
+procedure TForm2.InsertDeskToDB(DB_Num: byte);
+var
+  I: Integer;
+  Table: TSQLIteTable;
+begin
+List.ReadSectionValues('Desk '+IntToStr(DB_Num)+' Numbers',FList[DB_Num]);
+
+if FList[DB_Num].Count>0 then
+  for I := 0 to FList[DB_Num].Count-1 do
+    begin
+    Table := DB.GetTable('SELECT `id` FROM `files` WHERE `title` = ' +
+      List.ReadString('N'+FList[DB_Num].Values[FList[DB_Num].Names[i]], 'title', 'NoName'));
+    DB.ExecSQL('INSERT INTO `desk` (`desk_n`, `number`, `file`, `title`, `order`)' +
+      ' VALUES (' + IntToStr(DB_Num) + ')');
+    {
+    ListBox.Items.Add(FList[N].Names[i]+' – '+
+      List.ReadString('N'+FList[N].Values[FList[N].Names[i]], 'title', 'NoName'));}
+    end;
+
+end;
+
+procedure TForm2.InsertFile(NN, Title, Comment: string; Cycle: boolean;
+  FileName: string);
+var
+  MS: TStream;
+  Cyc: string;
+  Table: TSQLiteTable;
+  LastUpdatedID: Integer;
+begin
+  if Cycle then Cyc := '1' else Cyc := '0';
+
+  DB.ExecSQL('INSERT INTO `files` (`Title`, `comment`, `cycle`) VALUES ("' + Title + '", "' + Comment + '", ' + Cyc + ')');
+  MS := TFileStream.Create(FileName, fmOpenRead);
+
+  Table := DB.GetTable('SELECT `id` FROM `files` WHERE `id` = last_insert_rowid()');
+  LastUpdatedID := Table.FieldAsInteger(0);
+
+  DB.UpdateBlob('UPDATE `files` SET `file` = ? WHERE `id` = last_insert_rowid()', MS);
+  FilesNN.Values[NN] := IntToStr(LastUpdatedID);
 end;
 
 procedure TForm2.ListBox1DragDrop(Sender, Source: TObject; X, Y: Integer);

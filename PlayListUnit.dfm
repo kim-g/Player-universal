@@ -769,9 +769,18 @@ object Form2: TForm2
       Top = 80
       Width = 126
       Height = 38
-      Caption = 'Save to DB'
+      Caption = 'Export to DB'
       TabOrder = 2
       OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 192
+      Top = 80
+      Width = 75
+      Height = 25
+      Caption = 'Button2'
+      TabOrder = 3
+      OnClick = Button2Click
     end
   end
   object Panel6: TPanel

@@ -71,3 +71,4 @@ Images/
 .gitignore
 
 *.sfk
+Win32/
