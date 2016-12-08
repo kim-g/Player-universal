@@ -799,7 +799,7 @@ procedure TForm1.LoadSPL(FileName: string);
       begin
       StringList.Values[Table.FieldAsString(1)] := Table.FieldAsString(2);
       if Table.FieldAsString(3) = ''
-        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(0)).Title
+        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(2)).Title
         else TitleList.Values[Table.FieldAsString(1)] := Table.FieldAsString(3);
       ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + TitleList.Values[Table.FieldAsString(1)]);
       Table.Next;
@@ -1089,10 +1089,7 @@ if DEBUG then ShowMessage('Call MusicAddress()');
 
 // Загрузка музыки
 TempFile :=  GetFile(StrToInt(StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]]));
-Desk.Bass.AssignStream(TempFile.Info);
-{Filename:=MusicAddress('Music') +  FTP.ReadString('Desk '+IntToStr(DeskN)+' Parameters', 'directory', 'ERROR')+'\'+
-  FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'file','Error');  }
-
+Desk.Bass.AssignStream(@TempFile.Info);
 
 BASS_ChannelSetAttribute(Desk.Bass.GetChannel,BASS_ATTRIB_PAN,Desk.Balance);
 

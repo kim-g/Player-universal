@@ -1,12 +1,11 @@
 unit BassCore;
 
 interface
-
-uses System.Classes, WinAPI.Windows, Bass;
-
+uses
+  Windows, Classes,
+  Bass;
 type
   PMemoryStream = ^TMemoryStream;
-
   TBASSCorePlayer = class(TObject)
     public
       constructor Create(hwnd:HWND);
@@ -18,20 +17,17 @@ type
       function GetPlaybackLength :Double;
       function GetPlaybackPosition :Double;
       function SetPlaybackPosition(seconds:Double) :BOOL;
-      procedure AssignStream(AStream:TMemoryStream);
-      function GetChannel: DWord;
+      procedure AssignStream(AStream:PMemoryStream);
+      function  GetChannel: DWORD;
     private
       BASSCh: HSTREAM;
       BASSProcs: BASS_FILEPROCS;
   end;
-
   procedure proc_close(user : Pointer); stdcall;
   function proc_len(user: Pointer): QWORD; stdcall;
   function proc_seek(offset: QWORD; user: Pointer): BOOL; stdcall;
   function proc_read(buffer: Pointer; length: DWORD; user: Pointer): DWORD; stdcall;
-
 implementation
-
 constructor TBASSCorePlayer.Create(hwnd:HWND);
 begin
   inherited Create;
@@ -42,9 +38,9 @@ begin
   BASS_Free;
   inherited Free;
 end;
-function TBASSCorePlayer.GetChannel: DWord;
+function TBASSCorePlayer.GetChannel: DWORD;
 begin
-Result :=  BASSCh;
+result := BASSCh;
 end;
 
 function TBASSCorePlayer.GetPlaybackLength :Double;
@@ -66,17 +62,17 @@ begin
   Result :=
     BASS_ChannelSetPosition(BASSCh, BASS_ChannelSeconds2Bytes(BASSCh, seconds),BASS_POS_BYTE);
 end;
-procedure TBASSCorePlayer.AssignStream(AStream: TMemoryStream);
+procedure TBASSCorePlayer.AssignStream(AStream: PMemoryStream);
 begin
-  //BASSCh := BASS_StreamCreateFile(True, AStream.Memory, 0, AStream.Size, 0);
+  BASSCh := BASS_StreamCreateFile(True, AStream.Memory, 0, AStream.Size, 0);
   BASSProcs.close := proc_close;
   BASSProcs.length := proc_len;
   BASSProcs.read := proc_read;
   BASSProcs.seek := proc_seek;
-  BASSCh := BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, 0, BASSProcs, @AStream)
+  //BASSCh := BASS_StreamCreateFileUser(STREAMFILE_NOBUFFER, 0, BASSProcs, @AStream)
 end;
     //CALLBACKS HERE
-    procedure proc_close(user: Pointer); stdcall;
+    procedure proc_close(user: Pointer);
     var
       AStreamInstance: PMemoryStream;
     begin
@@ -86,14 +82,14 @@ end;
     end;
     function proc_len(user: Pointer): QWORD; stdcall;
     var
-      AStreamInstance: PMemoryStream;
+      AStreamInstance: ^TMemoryStream;
     begin
       AStreamInstance := user;
       Result := AStreamInstance^.Size;
     end;
     function proc_seek(offset: QWORD; user: Pointer): BOOL; stdcall;
     var
-      AStreamInstance: PMemoryStream;
+      AStreamInstance: ^TMemoryStream;
       NewPosition: Int64;
     begin
       AStreamInstance := user;
@@ -102,13 +98,12 @@ end;
     end;
     function proc_read(buffer: Pointer; length: DWORD; user: Pointer): DWORD; stdcall;
     var
-      AStreamInstance: PMemoryStream;
+      AStreamInstance: ^TMemoryStream;
       BytesReaded: DWORD;
     begin
       AStreamInstance := user;
       Result := AStreamInstance^.Read(buffer^, length);
     end;
-
 function TBASSCorePlayer.Play :BOOL;
 begin
   Result := BASS_ChannelPlay(BASSCh, False);
@@ -121,6 +116,5 @@ function TBASSCorePlayer.Pause :BOOL;
 begin
   Result := BASS_ChannelPause(BASSCh)
 end;
-
-
 end.
+
