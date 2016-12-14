@@ -50,7 +50,7 @@ function ListAddress(INI:TINIFile):string; stdcall;
 begin
   if Debug then ShowMessage('Called ListAddress(INI:TINIFile)');
   if ApplicationExeName = '' then ApplicationExeName := ExtractFilePath(Application.ExeName);
-  Result := ApplicationExeName + 'ListDir\';
+  Result := ApplicationExeName + 'Music\';
 end;
 
 exports ShutDownPlayer, ConfigAddress, MusicAddress, ListAddress;

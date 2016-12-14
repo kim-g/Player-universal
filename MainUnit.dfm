@@ -846,10 +846,8 @@ object Form1: TForm1
       ParentFont = False
       Layout = tlCenter
       WordWrap = True
-      ExplicitLeft = -16
-      ExplicitTop = -6
-      ExplicitWidth = 1024
-      ExplicitHeight = 79
+      ExplicitLeft = 0
+      ExplicitTop = 2
     end
     object CloseB: TSpeedButton
       Tag = 10
@@ -1456,6 +1454,22 @@ object Form1: TForm1
       ExplicitWidth = 105
       ExplicitHeight = 105
     end
+  end
+  object LoadPanel: TPanel
+    Left = 451
+    Top = 290
+    Width = 114
+    Height = 44
+    Caption = #1047#1072#1075
+    Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -43
+    Font.Name = 'Cambria'
+    Font.Style = []
+    ParentBackground = False
+    ParentFont = False
+    TabOrder = 14
   end
   object OD: TOpenDialog
     Left = 920

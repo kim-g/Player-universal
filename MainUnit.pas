@@ -94,6 +94,7 @@ end;
     Black_Right: TShape;
     Track_Image1: TPaintBox;
     Track_Image2: TPaintBox;
+    LoadPanel: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure SetMusic(Capt, Timer, Length: TLabel;
   var Desk: TBass; StringList, TitleList: TStringList; DeskN: Byte; RepeatImage: TImage; TrackImage:TPaintBox);
@@ -317,6 +318,24 @@ var
   smin,ssec,Temp:string;
   bmin,bsec:Integer;
 begin
+if ListBoxItems[NDesk].Count = 0 then
+  begin
+  if Position.Caption <> '--:--' then Position.Caption := '--:--';
+  // Нарисовать треки
+  DrawTrack(Desk_Bass[NDesk], NDesk, Track_Image, Track_Panel);
+  if iiPlay.Visible then iiPlay.Visible := false;
+  Track_Panel.Color := $AAAAAA;
+
+  Track_Image.Canvas.Pen.Color := IndBackColor;
+  Track_Image.Canvas.Brush.Color := IndBackColor;
+  Track_Image.Canvas.FillRect(TRect.Create(0,0,Track_Image.Width, Track_Image.Height));
+
+  iiPlay.Picture := nil;
+
+  Exit;
+  end;
+
+
 PosB:=BASS_ChannelGetPosition(Desk_Bass[NDesk].Bass.GetChannel, 0);                      // Получить текущую позицию
 
 // Нарисовать треки
@@ -332,6 +351,7 @@ Temp:=smin+':'+ssec;
 if Position.Caption<>Temp then Position.Caption:=Temp;
 
 // Изменить картинку текущего статуса
+if not iiPlay.Visible then iiPlay.Visible := true;
 ChangePic(Desk, NDesk, iiPlay);
 end;
 
@@ -372,6 +392,22 @@ end;
 procedure TForm1.DrawList(List: TImage; DeskN: Byte);
 var
   I: Integer;
+
+  procedure DrawBevel;
+  begin
+    List.Canvas.Pen.Color:=$000000;
+    List.Canvas.MoveTo(0,0);
+    List.Canvas.LineTo(List.Width-1,0);
+    List.Canvas.LineTo(List.Width-1,List.Height-1);
+    List.Canvas.LineTo(0,List.Height-1);
+    List.Canvas.LineTo(0,0);
+    List.Canvas.Pen.Color:=$888888;
+    List.Canvas.MoveTo(1,1);
+    List.Canvas.LineTo(List.Width-2,1);
+    List.Canvas.LineTo(List.Width-2,List.Height-2);
+    List.Canvas.LineTo(1,List.Height-2);
+    List.Canvas.LineTo(1,1);
+  end;
 begin
 // Подготавливаем поле для вывода
 List.Canvas.Font.Name:='Courier New';
@@ -382,6 +418,25 @@ List.Canvas.Pen.Color:=$FFFFFF;
 List.Canvas.Brush.Style:= bsSolid;
 List.Canvas.Rectangle(0,0,List.Width,List.Height);
 List.Canvas.Brush.Style:= bsClear;
+List.Canvas.Font.Style:=[];
+
+if ListBoxItems[DeskN].Count = 0 then
+  begin
+  // Рисуем серый фон
+  List.Canvas.Brush.Color:=$AAAAAA;
+  List.Canvas.Pen.Color:=$000000;
+  List.Canvas.Font.Color:=$333333;
+  List.Canvas.Font.Style:=[fsBold, fsItalic];
+  List.Canvas.Brush.Style:= bsSolid;
+  List.Canvas.Rectangle(0,0,List.Width,List.Height);
+
+
+  // Рисуем надпись
+  List.Canvas.TextOut(round(150*Scale),
+                        round(168*Scale),'Список пуст');
+  Exit;
+  end;
+
 
 // Выводим список
 for I := -8 to 8 do
@@ -396,7 +451,7 @@ for I := -8 to 8 do
     List.Canvas.Brush.Color:=$880000;
     List.Canvas.Pen.Color:=$000000;
     List.Canvas.Font.Color:=$FFFFFF;
-    List.Canvas.Brush.Style:= bsSolid;
+    List.Canvas.Brush.Style:= TBrushStyle.bsSolid;
     List.Canvas.Rectangle(round(2*Scale),
                           round(168*Scale+I*21*Scale),
                           round(463*Scale),
@@ -444,18 +499,7 @@ for I := -8 to 8 do
   end;
 
 // Завершение рисования
-List.Canvas.Pen.Color:=$000000;
-List.Canvas.MoveTo(0,0);
-List.Canvas.LineTo(List.Width-1,0);
-List.Canvas.LineTo(List.Width-1,List.Height-1);
-List.Canvas.LineTo(0,List.Height-1);
-List.Canvas.LineTo(0,0);
-List.Canvas.Pen.Color:=$888888;
-List.Canvas.MoveTo(1,1);
-List.Canvas.LineTo(List.Width-2,1);
-List.Canvas.LineTo(List.Width-2,List.Height-2);
-List.Canvas.LineTo(1,List.Height-2);
-List.Canvas.LineTo(1,1);
+DrawBevel;
 end;
 
 procedure TForm1.DrawTrack(Desk: TBass; NDesk: byte; Image: TPaintBox; Panel: TPanel; Force: boolean = false);
@@ -696,6 +740,8 @@ procedure TForm1.ListBox1MouseDown(Sender: TObject; Button: TMouseButton;
 var
   MousePositionNum: Integer;
 begin
+if ListBoxItems[TComponent(Sender).Tag].Count = 0 then Exit;
+
 if MouseDown then exit;
 
 MouseDown := true;
@@ -713,6 +759,8 @@ end;
 
 procedure TForm1.ListBox1MouseLeave(Sender: TObject);
 begin
+if ListBoxItems[TComponent(Sender).Tag].Count = 0 then Exit;
+
 if MouseDown then
   begin
   MouseDown:=false;
@@ -724,6 +772,8 @@ end;
 
 procedure TForm1.ListDown(DeskN: byte);
 begin
+if ListBoxItems[DeskN].Count = 0 then Exit;
+
 if ListBoxItemSelected[DeskN]<ListBoxItems[DeskN].Count-1 then
   ListBoxItemSelected[DeskN]:=ListBoxItemSelected[DeskN]+1;
 
@@ -733,6 +783,8 @@ end;
 
 procedure TForm1.ListUp(DeskN: byte);
 begin
+if ListBoxItems[DeskN].Count = 0 then Exit;
+
 if ListBoxItemSelected[DeskN]>0 then
   ListBoxItemSelected[DeskN]:=ListBoxItemSelected[DeskN]-1;
   
@@ -745,6 +797,8 @@ procedure TForm1.ListBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
 var
   MousePositionNum: Integer;
 begin
+if ListBoxItems[TComponent(Sender).Tag].Count = 0 then Exit;
+
 if not MouseDown then exit;
 
 MousePositionNum := ListBoxItemSelected[TComponent(Sender).Tag] - round(8{*XScale}) + (Y div round(21*Scale));
@@ -768,6 +822,8 @@ end;
 procedure TForm1.ListBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+if ListBoxItems[TComponent(Sender).Tag].Count = 0 then Exit;
+
 if ListBoxItemClicked[TComponent(Sender).Tag]=-1 then
   begin
   DrawList(TImage(Sender), TComponent(Sender).Tag);
@@ -794,16 +850,18 @@ procedure TForm1.LoadSPL(FileName: string);
 
     StringList := TStringList.Create;
     TitleList := TStringList.Create;
+    ListBoxItems[DeskN].Clear;
 
-    for I := 0 to Table.Count - 1 do
-      begin
-      StringList.Values[Table.FieldAsString(1)] := Table.FieldAsString(2);
-      if Table.FieldAsString(3) = ''
-        then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(2)).Title
-        else TitleList.Values[Table.FieldAsString(1)] := Table.FieldAsString(3);
-      ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + TitleList.Values[Table.FieldAsString(1)]);
-      Table.Next;
-      end;
+    if Table.Count > 0 then
+      for I := 0 to Table.Count - 1 do
+        begin
+        StringList.Values[Table.FieldAsString(1)] := Table.FieldAsString(2);
+        if Table.FieldAsString(3) = ''
+          then TitleList.Values[Table.FieldAsString(1)] := GetFile(Table.FieldAsInteger(2)).Title
+          else TitleList.Values[Table.FieldAsString(1)] := Table.FieldAsString(3);
+        ListBoxItems[DeskN].Add(StringList.Names[i] + ' - ' + TitleList.Values[Table.FieldAsString(1)]);
+        Table.Next;
+        end;
 
     ListBoxItemSelected[DeskN]:=0;
 
@@ -816,6 +874,12 @@ var
   Table: TSQLiteTable;
 begin
 FTP.Free;
+
+// Показ надписи загрузка
+LoadPanel.Align := TAlign.alClient;
+LoadPanel.Visible := true;
+LoadPanel.Caption := 'Загрузка...';
+Application.ProcessMessages;
 
 // Загрузка БД
 DB := TSQLiteDatabase.Create(FileName);
@@ -860,6 +924,9 @@ SetMusicDesk1;
 SetMusicDesk2;
 
 Config.WriteString('start options','file',FileName);
+
+// Убрать надпись загрузка
+LoadPanel.Visible := false;
 end;
 
 procedure TForm1.MusicStatusTimerTimer(Sender: TObject);
@@ -875,6 +942,9 @@ if SEList[DeskN].SE1.Visible then
   SEList[DeskN].SE1.Visible:=false;
   SEList[DeskN].SE2.Visible:=false;
   end;
+
+if ListBoxItems[DeskN].Count = 0 then Exit;
+
 case Desk_Bass[DeskN].mode of
 pmplay:
   begin
@@ -908,6 +978,9 @@ if SEList[DeskN].SE1.Visible then
   SEList[DeskN].SE1.Visible:=false;
   SEList[DeskN].SE2.Visible:=false;
   end;
+
+  if ListBoxItems[DeskN].Count = 0 then Exit;
+
 
   //Загрузка положений эквалайзера
 for I := 1 to 10 do
@@ -1087,6 +1160,18 @@ BASS_ChannelStop(Desk.Bass.GetChannel); BASS_StreamFree(Desk.Bass.GetChannel);  
 
 if DEBUG then ShowMessage('Call MusicAddress()');
 
+// Проверим, что список не пуст
+if StringList.Count = 0 then
+  begin
+  Length.Caption := '--:--';
+  Capt.Caption := '';
+  RepeatImage.Picture := nil;
+
+  Exit;
+  end;
+
+
+
 // Загрузка музыки
 TempFile :=  GetFile(StrToInt(StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]]));
 Desk.Bass.AssignStream(@TempFile.Info);
@@ -1198,6 +1283,9 @@ if SEList[DeskN].SE1.Visible then
   SEList[DeskN].SE1.Visible:=false;
   SEList[DeskN].SE2.Visible:=false;
   end;
+
+if ListBoxItems[DeskN].Count = 0 then Exit;
+
 if not BASS_ChannelStop(Desk_Bass[DeskN].Bass.GetChannel) then
 			begin ShowMessage('Ошибка воспроизведения файла');exit;end;
 if not BASS_ChannelSetPosition(Desk_Bass[DeskN].Bass.GetChannel,0,0) then

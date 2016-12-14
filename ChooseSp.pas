@@ -60,7 +60,7 @@ var
 begin
 ListBox1.Clear;
 
-if FindFirst(ListAddress(Config) + '*.spl',faNormal,tsr) = 0 then
+if FindFirst(ListAddress(Config) + '*.sdb',faNormal,tsr) = 0 then
   repeat
     fn:=tsr.name;
     ListBox1.Items.Add(fn.Remove(fn.Length-4));
@@ -71,7 +71,7 @@ ShowModal;
 
 if ListBox1.ItemIndex=-1
   then ChSp:='none'
-  else ChSp:=ListAddress(Config)+ListBox1.Items[ListBox1.ItemIndex]+'.spl';
+  else ChSp:=ListAddress(Config)+ListBox1.Items[ListBox1.ItemIndex]+'.sdb';
 end;
 
 procedure TChooseSpForm.ListBox1DblClick(Sender: TObject);
