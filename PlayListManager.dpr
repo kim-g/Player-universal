@@ -7,7 +7,8 @@ uses
   NTrackUnit in 'NTrackUnit.pas' {NTrackForm},
   SQLite3 in 'SQLite3.pas',
   SQLiteTable3 in 'SQLiteTable3.pas',
-  SQL_Const in 'SQL_Const.pas';
+  SQL_Const in 'SQL_Const.pas',
+  FileProperties in 'FileProperties.pas';
 
 {$R *.res}
 

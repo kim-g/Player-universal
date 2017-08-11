@@ -12,18 +12,26 @@ object NTrackForm: TNTrackForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
   PixelsPerInch = 96
   TextHeight = 19
   object Label1: TLabel
-    Left = 8
-    Top = 35
+    Left = 16
+    Top = 11
     Width = 47
     Height = 19
     Caption = #1053#1086#1084#1077#1088
   end
+  object Label2: TLabel
+    Left = 16
+    Top = 44
+    Width = 76
+    Height = 19
+    Caption = #1047#1072#1075#1086#1083#1086#1074#1086#1082
+  end
   object Edit1: TEdit
-    Left = 72
-    Top = 32
+    Left = 80
+    Top = 8
     Width = 321
     Height = 27
     TabOrder = 0
@@ -46,5 +54,12 @@ object NTrackForm: TNTrackForm
     Caption = #1054#1090#1084#1077#1085#1072
     TabOrder = 2
     OnClick = Button2Click
+  end
+  object Edit2: TEdit
+    Left = 104
+    Top = 41
+    Width = 297
+    Height = 27
+    TabOrder = 3
   end
 end

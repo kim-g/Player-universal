@@ -42,50 +42,25 @@ object Form2: TForm2
     object ListBox1: TListBox
       Tag = 1
       Left = 11
-      Top = 49
+      Top = 11
       Width = 317
-      Height = 538
+      Height = 576
       Align = alClient
       DragMode = dmAutomatic
       ItemHeight = 19
       TabOrder = 0
+      OnDblClick = ListBox1DblClick
       OnDragDrop = ListBox1DragDrop
       OnDragOver = ListBox1DragOver
     end
-    object Panel4: TPanel
-      Left = 11
-      Top = 11
-      Width = 347
-      Height = 38
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 1
-      object Label3: TLabel
-        Left = 0
-        Top = 3
-        Width = 88
-        Height = 19
-        Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103
-      end
-      object Edit3: TEdit
-        Tag = 1
-        Left = 94
-        Top = 0
-        Width = 251
-        Height = 27
-        TabOrder = 0
-        Text = 'Edit3'
-        OnChange = Edit3Change
-      end
-    end
     object Panel7: TPanel
       Left = 328
-      Top = 49
+      Top = 11
       Width = 30
-      Height = 538
+      Height = 576
       Align = alRight
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object SpeedButton1: TSpeedButton
         Tag = 1
         Left = 0
@@ -390,50 +365,25 @@ object Form2: TForm2
     object ListBox2: TListBox
       Tag = 2
       Left = 11
-      Top = 49
+      Top = 11
       Width = 284
-      Height = 538
+      Height = 576
       Align = alClient
       DragMode = dmAutomatic
       ItemHeight = 19
       TabOrder = 0
+      OnDblClick = ListBox1DblClick
       OnDragDrop = ListBox1DragDrop
       OnDragOver = ListBox1DragOver
     end
-    object Panel5: TPanel
-      Left = 11
-      Top = 11
-      Width = 314
-      Height = 38
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 1
-      object Label4: TLabel
-        Left = 0
-        Top = 3
-        Width = 88
-        Height = 19
-        Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103
-      end
-      object Edit4: TEdit
-        Tag = 2
-        Left = 94
-        Top = 0
-        Width = 219
-        Height = 27
-        TabOrder = 0
-        Text = 'Edit3'
-        OnChange = Edit3Change
-      end
-    end
     object Panel8: TPanel
       Left = 295
-      Top = 49
+      Top = 11
       Width = 30
-      Height = 538
+      Height = 576
       Align = alRight
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object SpeedButton4: TSpeedButton
         Tag = 2
         Left = 0
@@ -806,7 +756,7 @@ object Form2: TForm2
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'spl'
-    Filter = #1060#1072#1081#1083' '#1084#1091#1079#1099#1082#1080' '#1076#1083#1103' '#1089#1087#1077#1082#1090#1072#1082#1083#1103' (*.sdb)|*.spl'
+    Filter = #1060#1072#1081#1083' '#1084#1091#1079#1099#1082#1080' '#1076#1083#1103' '#1089#1087#1077#1082#1090#1072#1082#1083#1103' (*.sdb)|*.sdb'
     Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Title = #1054#1090#1082#1088#1099#1090#1100' '#1080#1083#1080' '#1089#1086#1079#1076#1072#1090#1100' '#1092#1072#1081#1083' spl'
     Left = 56

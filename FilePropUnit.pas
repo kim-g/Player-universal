@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, FileProperties;
 
 type
   TFileProp = class(TForm)
@@ -21,14 +21,12 @@ type
   private
     { Private declarations }
   public
-    function ShowProp(FileN:integer; TrackName: string):boolean;
+    function ShowProp(TrackName: string; RepeatMusic: Boolean): TFileProperties;
   end;
 
 var
   FileProp: TFileProp;
   AddOK:boolean;
-  FileNumber:integer;
-  TrName:string;
 
 implementation
 
@@ -41,8 +39,6 @@ uses PlayListUnit;
 procedure TFileProp.Button1Click(Sender: TObject);
 begin
 AddOK:=true;
-PlayListUnit.List.WriteString('N'+IntToStr(FileNumber),'title',Edit2.Text);
-if CheckBox1.Checked then PlayListUnit.List.WriteBool('N'+IntToStr(FileNumber),'repeat',true);
 Close;
 end;
 
@@ -56,17 +52,27 @@ begin
 Button1.Enabled:=Edit2.Text<>'';
 end;
 
-function TFileProp.ShowProp(FileN: integer; TrackName: string): boolean;
+function TFileProp.ShowProp(TrackName: string; RepeatMusic: Boolean): TFileProperties;
+var FP:TFileProperties;
 begin
 AddOK:=false;
-FileNumber:=FileN;
-TrName:=TrackName;
-Label2.Caption:=List.ReadString('N'+IntToStr(FileNumber),'file','ERROR!!!');
+Label2.Caption:='';
 if TrackName='' then Button1.Enabled:=false;
-Edit2.Text:= List.ReadString('N'+IntToStr(FileNumber),'title','ERROR!!!');
-CheckBox1.Checked:=List.ReadBool('N'+IntToStr(FileNumber),'repeat',false);
+Edit2.Text:= TrackName;
+CheckBox1.Checked:=RepeatMusic;
 ShowModal;
-ShowProp:=AddOK;
+FP := TFileProperties.Create;
+if AddOK then
+  begin
+  FP.Title := Edit2.Text;
+  FP.RepeatMusic := CheckBox1.Checked;
+  end
+else
+  begin
+  FP.Title := TrackName;
+  FP.RepeatMusic := RepeatMusic;
+  end;
+Result := FP;
 end;
 
 end.

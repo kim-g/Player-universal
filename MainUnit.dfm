@@ -1456,8 +1456,8 @@ object Form1: TForm1
     end
   end
   object LoadPanel: TPanel
-    Left = 451
-    Top = 290
+    Left = 447
+    Top = 296
     Width = 114
     Height = 44
     Caption = #1047#1072#1075

@@ -12,12 +12,14 @@ type
     Label1: TLabel;
     Button1: TButton;
     Button2: TButton;
+    Label2: TLabel;
+    Edit2: TEdit;
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
-    function ShowF(Old:string):string;
+    function ShowF(OldN: string; OldTitle: string):TStrings;
   end;
 
 var
@@ -43,11 +45,17 @@ ReturnA:='@@ CLOSE @@';
 Close;
 end;
 
-function TNTrackForm.ShowF(Old: string): string;
+function TNTrackForm.ShowF(OldN: string; OldTitle: string): TStrings;
+var
+  Res: TStrings;
 begin
-Edit1.Text:=Old;
+Res := TStringList.Create;
+Edit1.Text:=OldN;
+Edit2.Text:=OldTitle;
 ShowModal;
-ShowF:=ReturnA;
+Res.Values['N'] := ReturnA;
+Res.Values['Title'] := Edit2.Text;
+ShowF:=Res;
 end;
 
 end.

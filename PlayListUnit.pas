@@ -19,12 +19,6 @@ type
     Label1: TLabel;
     Label2: TLabel;
     SaveDialog1: TSaveDialog;
-    Panel4: TPanel;
-    Label3: TLabel;
-    Edit3: TEdit;
-    Panel5: TPanel;
-    Label4: TLabel;
-    Edit4: TEdit;
     Panel6: TPanel;
     ListBox3: TListBox;
     Panel7: TPanel;
@@ -45,7 +39,6 @@ type
     procedure AddFile(Desk:byte; FileName:string);
     procedure Edit1Change(Sender: TObject);
     procedure Edit2Change(Sender: TObject);
-    procedure Edit3Change(Sender: TObject);
     procedure ListBox1DragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure ListBox1DragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -55,14 +48,16 @@ type
     procedure SpeedButton2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure ListBox1DblClick(Sender: TObject);
   private
     procedure WMDropFiles (hDrop : THandle; hWindow : HWnd);
     Function PointInComponent(Component:TControl; Point:TPoint):boolean;
-    procedure ReadDesk(N:Byte; Edit:TEdit; ListBox:TListBox);
+    procedure ReadDesk(N: Byte; ListBox:TListBox; ItemIndex:Integer=-1);
     procedure MoveRec(NDesk:byte; ListBox:TListbox; StartMv, EndMv:integer);
-    procedure InsertFile(NN, Title, Comment: string; Cycle: boolean;
-      FileName: string);
+    procedure InsertFile(Title, Comment: string; Cycle: boolean; FileName: string);
     procedure InsertDeskToDB(DB_Num: byte);
+    procedure UpdateFileList;
+    function ExtractOnlyFileName(const FileName: string): string;
   public
     { Public declarations }
   end;
@@ -75,7 +70,8 @@ var
   ListBox: array [1..3] of TListBox;
   FileName: string;
   DB: TSQLiteDatabase;
-  FilesNN: TStrings;
+  FilesNN: TStringList;
+  DeskID: array [1..2] of TStringList;
 
 const
   PN_Standart = 'StD Player';
@@ -86,40 +82,19 @@ implementation
 
 {$R *.dfm}
 
-uses FilePropUnit, NTrackUnit;
+uses FilePropUnit, NTrackUnit, FileProperties;
+
+function TForm2.ExtractOnlyFileName(const FileName: string): string;
+begin
+result:=StringReplace(ExtractFileName(FileName),ExtractFileExt(FileName),'',[]);
+end;
 
 procedure TForm2.AddFile(Desk: byte; FileName: string);
 var
-  I: Integer;
-  NN:Integer;
-  Exists:boolean;
+  FP: TFileProperties;
 begin
-Exists:=false;
-for I := 0 to GeneralFileList.Count-1 do
-  if ExtractFileName(FileName)=
-    List.ReadString('N'+GeneralFileList[i], 'file', 'ERROR!!!')
-    then
-     begin
-     Exists:=true;
-     break;
-     end;
-if not Exists then
-  begin
-  NN:=List.ReadInteger('General','files',0)+1;
-  List.WriteInteger('General','files',NN);
-  List.WriteString('N'+IntToStr(NN),'file',ExtractFileName(FileName));
-  List.WriteString('N'+IntToStr(NN),'title',ExtractFileName(FileName));
-  List.WriteString('N'+IntToStr(NN),'comment','none');
-  //GeneralFileList.Add(IntToStr(NN));
-  List.WriteString('Files List',IntToStr(NN),IntToStr(NN));
-
-  FileProp.ShowProp(NN,'');
-
-  ListBox3.Items.Add(IntToStr(NN) + ' - ' +
-    List.ReadString('N'+IntToStr(NN), 'title', 'ERROR!!!'));
-  end;
-
-List.UpdateFile;
+  FP := FileProp.ShowProp(ExtractOnlyFileName(FileName),false);
+  InsertFile(FP.Title, '', FP.RepeatMusic, FileName);
 end;
 
 procedure TForm2.AppMessage(var Msg: TMsg; var Handled: Boolean);
@@ -146,7 +121,7 @@ var
   N: Integer;
   NewTitle: string;
 begin
-  DB := TSQLiteDatabase.Create(ExtractFilepath(FileName) + Edit1.Text + '.sdb');
+ { DB := TSQLiteDatabase.Create(ExtractFilepath(FileName) + Edit1.Text + '.sdb');
 
   DB.ExecSQL(DB_Create_INFO);
   DB.ExecSQL(DB_Create_FILES);
@@ -182,10 +157,10 @@ begin
        {
        ListBox.Items.Add(FList[N].Names[i]+' – '+
        List.ReadString('N'+FList[N].Values[FList[N].Names[i]], 'title', 'NoName')); }
-       end;
+       {end;
     end;
 
-
+ }
 end;
 
 procedure TForm2.Button2Click(Sender: TObject);
@@ -205,18 +180,12 @@ end;
 
 procedure TForm2.Edit1Change(Sender: TObject);
 begin
-List.WriteString('General','name',Edit1.Text);
-List.UpdateFile;
+DB.ExecSQL('UPDATE `info` SET `name`="'+Edit1.Text+'" WHERE `id`=1');
 end;
 
 procedure TForm2.Edit2Change(Sender: TObject);
 begin
-List.WriteString('General','description',Edit2.Text);
-end;
-
-procedure TForm2.Edit3Change(Sender: TObject);
-begin
-List.WriteString('Desk '+IntToStr(TEdit(Sender).Tag)+' Parameters','directory',TEdit(Sender).Text);
+DB.ExecSQL('UPDATE `info` SET `description`="'+Edit2.Text+'" WHERE `id`=1');
 end;
 
 procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -231,52 +200,42 @@ var
   ProgramName:string;
   I: Integer;
   NList:Integer;
+  Table:TSQLiteTable;
 begin
 if not SaveDialog1.Execute then
   Application.Terminate;
 
+// Создадим списки
+FilesNN := TStringList.Create;
+DeskID[1] := TStringList.Create;
+DeskID[2] := TStringList.Create;
+
 FileName := SaveDialog1.FileName;
 
 FE:=FileExists(SaveDialog1.FileName);
-List:=TINIFile.Create(SaveDialog1.FileName);
+DB:= TSQLiteDataBase.Create(SaveDialog1.FileName);
+if not FE then
+  begin
+  DB.ExecSQL(DB_Create_INFO);
+  DB.ExecSQL(DB_Create_FILES);
+  DB.ExecSQL(DB_Create_DESK);
+
+  DB.ExecSQL('INSERT INTO `info` (`name`, `description`, `version`, `last_d_1`, `last_d_2`) VALUES ("' +
+    Edit1.Text + '", "' + Edit2.Text + '", 2, 0, 0)');
+  end;
 
 for I := 1 to 2 do
   FList[i]:=TStringList.Create;
 
 GeneralFileList:=TStringList.Create;
 
-if FE then
-  begin
-  ProgramName:=List.ReadString('General','program','ERROR');
-  if ProgramName<>PN_Standart then
-    begin
-    ShowMessage('Файл "'+SaveDialog1.FileName+'" повреждён.');
-    Application.Terminate;
-    end;
-  end
- else
-  begin
-  List.WriteString('General','program',PN_Standart);
-  end;
+Table := DB.GetTable('SELECT * FROM `info`');
+Edit1.Text:=Table.FieldAsString(Table.FieldIndex['name']);
+Edit2.Text:=Table.FieldAsString(Table.FieldIndex['description']);
 
-List.WriteInteger('General','files',List.ReadInteger('General','files',0));
-
-Edit1.Text:=List.ReadString('General','name','');
-Edit2.Text:=List.ReadString('General','description','');
-
-Nlist:=List.ReadInteger('General','files',0);
-
-//List.ReadSectionValues('Files List',GeneralFileList);
-
-if Nlist>0 then
-  for I := 1 to Nlist do
-    begin
-    ListBox3.Items.Add(List.ReadString('Files List', IntToStr(i), 'ERROR')+' – '+
-      List.ReadString('N'+List.ReadString('Files List', IntToStr(i), 'ERROR'), 'title', 'NoName'));
-    end;
-
-ReadDesk(1,Edit3,ListBox1);
-ReadDesk(2,Edit4,ListBox2);
+UpdateFileList;
+ReadDesk(1,ListBox1);
+ReadDesk(2,ListBox2);
 
 ListBox[1]:=ListBox1;
 ListBox[2]:=ListBox2;
@@ -313,8 +272,7 @@ if FList[DB_Num].Count>0 then
 
 end;
 
-procedure TForm2.InsertFile(NN, Title, Comment: string; Cycle: boolean;
-  FileName: string);
+procedure TForm2.InsertFile(Title, Comment: string; Cycle: boolean; FileName: string);
 var
   MS: TStream;
   Cyc: string;
@@ -330,36 +288,66 @@ begin
   LastUpdatedID := Table.FieldAsInteger(0);
 
   DB.UpdateBlob('UPDATE `files` SET `file` = ? WHERE `id` = last_insert_rowid()', MS);
-  FilesNN.Values[NN] := IntToStr(LastUpdatedID);
+end;
+
+procedure TForm2.ListBox1DblClick(Sender: TObject);
+var
+  Table: TSQLiteTable;
+  Res: TStrings;
+begin
+if TListBox(Sender).ItemIndex = -1 then exit;
+
+Table := DB.GetTable('SELECT `number`, `title` FROM `desk` WHERE `id`=' + DeskID[TListBox(Sender).Tag][TListBox(Sender).ItemIndex]);
+while true do
+    begin
+    Res:=NTrackForm.ShowF(Table.FieldAsString(0), Table.FieldAsString(1));
+    if Res.Values['N']='@@ CLOSE @@' then exit;
+
+    Table := DB.GetTable('SELECT Count() AS Count FROM desk WHERE number="' + Res.Values['N'] +
+      '" AND `id`<>' + DeskID[TListBox(Sender).Tag][TListBox(Sender).ItemIndex]);
+    if Table.FieldAsInteger(Table.FieldIndex['Count']) = 0 then
+      break;
+    ShowMessage('Такой номер трека уже имеется!');
+    end;
+DB.ExecSQL('UPDATE `desk` SET `number`="' + Res.Values['N'] + '", `title`="' + Res.Values['Title']
+  + '" WHERE `id`=' + DeskID[TListBox(Sender).Tag][TListBox(Sender).ItemIndex]);
+ReadDesk(TComponent(Sender).Tag, TListBox(Sender), TListBox(Sender).ItemIndex);
 end;
 
 procedure TForm2.ListBox1DragDrop(Sender, Source: TObject; X, Y: Integer);
 var
-  NewName:string;
+  Res:TStrings;
   tmp: string;
   mypoint: TPoint;
   i:integer;
+  Table: TSQLiteTable;
 const
   NoName='@@ OK @@';
 begin
 
-//Перетаскивание с центрального ListBox
+//Перетаскивание на центрального ListBox
 if Source = ListBox3 then
   begin
   while true do
     begin
-    NewName:=NTrackForm.ShowF('');
-    if List.ReadString('Desk '+IntToStr(TComponent(Sender).Tag)+' Numbers',NewName,NoName) = NoName then
+    Res:=NTrackForm.ShowF('', '');
+    if Res.Values['N']='@@ CLOSE @@' then exit;
+    Table := DB.GetTable('SELECT Count() AS Count FROM desk WHERE number="' + Res.Values['N'] + '"');
+    if Table.FieldAsInteger(Table.FieldIndex['Count']) = 0 then
       break;
     ShowMessage('Такой номер трека уже имеется!');
     end;
-  List.WriteString('Desk '+IntToStr(TComponent(Sender).Tag)+' Numbers',NewName,
-    List.ReadString('Files List',IntToStr(ListBox3.ItemIndex+1),'ERROR'));
-  TListBox(Sender).Items.add(NewName + ' – ' +
-    List.ReadString('N' + List.ReadString('Files List',IntToStr(ListBox3.ItemIndex+1),'ERROR'),
-      'title', 'ERROR!'));
-  Flist[TComponent(Sender).Tag].Values[NewName]:=
-    List.ReadString('Files List',IntToStr(ListBox3.ItemIndex+1),'ERROR');
+
+  // Получим максимальное ORDER
+  Table := DB.GetTable('SELECT case when COUNT(*)=0 then 0 else `order` end ''order'' FROM `desk` WHERE `desk_n`=' + IntToStr(TComponent(Sender).Tag) +
+    ' ORDER BY `order` DESC LIMIT 1');
+
+  DB.ExecSQL('INSERT INTO desk (`desk_n`, `number`, `file`, `title`, `order`) VALUES (' +
+    IntToStr(TComponent(Sender).Tag) + ', "' + Res.Values['N'] + '", ' + FilesNN[ListBox3.ItemIndex] + ', "' +
+    Res.Values['Title'] + '", ' +
+    IntToStr(Table.FieldAsInteger(Table.FieldIndex['order'])+1) + ')');
+
+  ReadDesk(TComponent(Sender).Tag, TListBox(Sender), TListBox(Sender).Items.Count);
   end;
 
 //Перетаскивание внутри ListBox
@@ -387,14 +375,23 @@ end;
 
 procedure TForm2.ListBox3DblClick(Sender: TObject);
 var
-  NN:string;
+  FP: TFileProperties;
+  Table: TSQLiteTable;
+  Cycle: string;
 begin
-NN:=List.ReadString('Files List',IntToStr(ListBox3.ItemIndex+1),'ERROR');
-if FileProp.ShowProp(ListBox3.ItemIndex+1,'')
-  then ListBox3.Items[ListBox3.ItemIndex]:=NN + ' – ' + List.ReadString('N'+NN,'title','ERROR!!!');
+FP := TFileProperties.Create;
 
-ReadDesk(1,Edit3,ListBox1);
-ReadDesk(2,Edit4,ListBox2);
+Table := DB.GetTable('SELECT `title`, `cycle` FROM `files` WHERE `id` = ' + FilesNN[ListBox3.ItemIndex]);
+FP := FileProp.ShowProp(Table.FieldAsString(Table.FieldIndex['title']),
+  Table.FieldAsInteger(Table.FieldIndex['cycle']) = 1);
+
+if FP.RepeatMusic then Cycle := '1' else Cycle := '0';
+DB.ExecSQL('UPDATE `files` SET `title`="' + FP.Title + '", `cycle`=' + Cycle + ' WHERE `id` = ' + FilesNN[ListBox3.ItemIndex]);
+
+// И всё обновим
+UpdateFileList;
+ReadDesk(1,ListBox1, ListBox1.ItemIndex);
+ReadDesk(2,ListBox2, ListBox2.ItemIndex);
 end;
 
 procedure TForm2.MoveRec(NDesk: byte; ListBox: TListbox; StartMv,
@@ -404,29 +401,62 @@ var
   i:integer;
   mv:integer;
   mvN:string;
+  Table: TSQLiteTable;
+  StartOrder, EndOrder: integer;
+  D_ID, D_Order: TStringList;
 begin
-tmp:=ListBox.Items[ListBox.ItemIndex];
+if StartMv=EndMv then exit;
 
-mv:=min(StartMv, EndMv);
+Table := DB.GetTable('SELECT `order` FROM `desk` WHERE `id`=' + DeskID[NDesk][StartMv]);
+StartOrder := Table.FieldAsInteger(0);
+Table := DB.GetTable('SELECT `order` FROM `desk` WHERE `id`=' + DeskID[NDesk][EndMv]);
+EndOrder := Table.FieldAsInteger(0);
 
-for I := mv to FList[NDesk].Count-1 do
+// Получим список ID и order между перемещаемыми
+Table := DB.GetTable('SELECT `id`, `order` FROM `desk` WHERE `order`>' + IntToStr(min(StartOrder, EndOrder)) +
+  ' AND `order`<' + IntToStr(max(StartOrder, EndOrder)) + ' ORDER BY `order`');
+
+// Перестановки
+D_ID := TStringList.Create;
+D_Order := TStringList.Create;
+
+if StartOrder < EndOrder then
   begin
-  List.DeleteKey('Desk '+IntToStr(NDesk)+' Numbers',
-    FList[NDesk].Names[i]);
+  while not Table.EOF do
+    begin
+    D_ID.Add(Table.FieldAsString(Table.FieldIndex['id']));
+    D_Order.Add(IntToStr(Table.FieldAsInteger(Table.FieldIndex['order']) - 1));
+    Table.Next;
+    end;
+  D_ID.Add(DeskID[NDesk][EndMv]);
+  D_Order.Add(IntToStr(EndOrder-1));
+  D_ID.Add(DeskID[NDesk][StartMv]);
+  D_Order.Add(IntToStr(EndOrder));
+  end
+else
+  begin
+  D_ID.Add(DeskID[NDesk][StartMv]);
+  D_Order.Add(IntToStr(EndOrder));
+  D_ID.Add(DeskID[NDesk][EndMv]);
+  D_Order.Add(IntToStr(EndOrder+1));
+  while not Table.EOF do
+    begin
+    D_ID.Add(Table.FieldAsString(Table.FieldIndex['id']));
+    D_Order.Add(IntToStr(Table.FieldAsInteger(Table.FieldIndex['order']) + 1));
+    Table.Next;
+    end;
   end;
 
-mvN:=FList[ListBox.Tag][StartMv];
-FList[ListBox.Tag].Delete(StartMv);
-FList[ListBox.Tag].Insert(EndMv,mvN);
+DB.BeginTransaction;
+for I := 0 to D_ID.Count-1 do
+  DB.ExecSQL('UPDATE `desk` SET `order`=' + D_Order[i] + ' WHERE `id`='+D_ID[i]);
+DB.Commit;
 
-for I := mv to FList[NDesk].Count-1 do
-  begin
-  List.WriteString('Desk '+IntToStr(NDesk)+' Numbers',
-    FList[NDesk].Names[i],
-    FList[NDesk].Values[FList[NDesk].Names[i]]);
-  end;
-ListBox.Items.Delete(StartMv);
-ListBox.Items.Insert(EndMv,tmp);
+// Очистка памяти
+D_ID.Free;
+D_Order.Free;
+
+ReadDesk(NDesk, ListBox, EndMv);
 end;
 
 function TForm2.PointInComponent(Component: TControl; Point: TPoint): boolean;
@@ -437,27 +467,46 @@ if Point.X >= Component.Left then
     if Point.Y >= Component.Top then
       if Point.Y <= Component.Top + Component.Height then
         Result:=true;
+if Component.ClassName = self.ClassName then
+  if Point.X >= 0 then
+    if Point.X <= Component.Width then
+      if Point.Y >= 0 then
+        if Point.Y <= Component.Height then
+          Result:=true;
+
 end;
 
-procedure TForm2.ReadDesk(N: Byte; Edit:TEdit; ListBox:TListBox);
+procedure TForm2.ReadDesk(N: Byte; ListBox:TListBox; ItemIndex:Integer=-1);
 var
   i:integer;
   s:string;
+  Table: TSQLiteTable;
 begin
-Edit.Text:=List.ReadString('Desk '+IntToStr(N)+' Parameters','directory','');
-
-s:='Desk '+IntToStr(N)+' Numbers';
-List.ReadSectionValues(s,FList[N]);
-
+// Очистим список
 ListBox.Items.Clear;
+DeskID[N].Clear;
 
-if FList[N].Count>0 then
-  for I := 0 to FList[N].Count-1 do
-    begin
-    ListBox.Items.Add(FList[N].Names[i]+' – '+
-      List.ReadString('N'+FList[N].Values[FList[N].Names[i]], 'title', 'NoName'));
-    end;
 
+// И добавим пункты в список
+Table := DB.GetTable('SELECT desk.id, desk.number, ' +
+  'case when desk.title="" then files.title else desk.title end title ' +
+  'FROM files INNER JOIN desk ON (desk.file = files.id) ' +
+  'WHERE desk.desk_n=' + IntToStr(N) + ' ORDER BY `order`');
+
+while not Table.EOF do
+  begin
+  DeskID[N].Add(Table.FieldAsString(Table.FieldIndex['id']));
+  ListBox.Items.Add(Table.FieldAsString(Table.FieldIndex['number']) + ' – ' +
+    Table.FieldAsString(Table.FieldIndex['title']));
+  Table.Next;
+  end;
+
+
+  if ListBox.Items.Count <= ItemIndex
+    then ListBox.ItemIndex := ListBox.Items.Count - 1
+    else if ItemIndex < 0
+           then ListBox.ItemIndex := 0
+           else ListBox.ItemIndex := ItemIndex;
 
 end;
 
@@ -473,7 +522,6 @@ if LastPos=0 then
   end;
 
 MoveRec(TComponent(Sender).Tag,ListBox[TComponent(Sender).Tag], LastPos, LastPos-1);
-ListBox[TComponent(Sender).Tag].ItemIndex:=LastPos-1;
 end;
 
 procedure TForm2.SpeedButton2Click(Sender: TObject);
@@ -487,23 +535,69 @@ if LastPos=ListBox[TComponent(Sender).Tag].Items.Count-1 then
   exit;
   end;
 MoveRec(TComponent(Sender).Tag,ListBox[TComponent(Sender).Tag], LastPos, LastPos+1);
-ListBox[TComponent(Sender).Tag].ItemIndex:=LastPos+1;
 end;
 
 procedure TForm2.SpeedButton3Click(Sender: TObject);
 var
   N:byte;
+  Table: TSQLiteTable;
+  D_ID, D_Order: TStrings;
+  I, StartOrder, EndOrder: Integer;
 begin
 N:=TComponent(Sender).Tag;
-List.DeleteKey('Desk '+IntToStr(N)+' Numbers',FList[N].Names[ListBox[N].ItemIndex]);
-FList[N].Delete(ListBox[N].ItemIndex);
-ListBox[N].Items.Delete(ListBox[N].ItemIndex);
+if ListBox[N].ItemIndex = -1 then Exit;
+
+Table := DB.GetTable('SELECT `order` FROM `desk` WHERE `id`=' + DeskID[N][ListBox[N].ItemIndex]);
+StartOrder := Table.FieldAsInteger(0);
+Table := DB.GetTable('SELECT `order` FROM `desk` ORDER BY `order` DESC LIMIT 1');
+EndOrder := Table.FieldAsInteger(0);
+
+// Удаление из списка
+DB.ExecSQL('DELETE FROM `desk` WHERE `id`=' + DeskID[N][ListBox[N].ItemIndex]);
+
+// Правка order
+// Получим список ID и order между перемещаемыми
+Table := DB.GetTable('SELECT `id`, `order` FROM `desk` WHERE `order`>' + IntToStr(min(StartOrder, EndOrder)) +
+  ' AND `order`<=' + IntToStr(max(StartOrder, EndOrder)) + ' ORDER BY `order`');
+
+// Перестановки
+D_ID := TStringList.Create;
+D_Order := TStringList.Create;
 
 
-if TMP_DEBUG then             //Для отладки
+  while not Table.EOF do
+    begin
+    D_ID.Add(Table.FieldAsString(Table.FieldIndex['id']));
+    D_Order.Add(IntToStr(Table.FieldAsInteger(Table.FieldIndex['order']) - 1));
+    Table.Next;
+    end;
+
+DB.BeginTransaction;
+for I := 0 to D_ID.Count-1 do
+  DB.ExecSQL('UPDATE `desk` SET `order`=' + D_Order[i] + ' WHERE `id`='+D_ID[i]);
+DB.Commit;
+
+
+ReadDesk(N, ListBox[N], ListBox[N].ItemIndex);
+end;
+
+
+// Обноление списка файлов
+procedure TForm2.UpdateFileList;
+var
+  Table: TSQLiteTable;
+begin
+// Очистим предыдущий список
+FilesNN.Clear;
+ListBox3.Items.Clear;
+
+// Получим данные из БД
+Table := DB.GetTable('SELECT `id`, `title` FROM `files`');
+while not Table.EOF do
   begin
-  FList[N].SaveToFile('Temp_FList_'+IntToStr(N)+'.ini');
-  ListBox[N].Items.SaveToFile('Temp_ListBox_'+IntToStr(N)+'.ini');
+  FilesNN.Add(Table.FieldAsString(Table.FieldIndex['id']));
+  ListBox3.Items.Add(Table.FieldAsString(Table.FieldIndex['title']));
+  Table.Next;
   end;
 end;
 
@@ -535,33 +629,33 @@ begin
 
   for i := 0 to TotalNumberOfFiles - 1 do begin
     {
-  Определяем длину имени файла,
-  сообщая DragQueryFile
-  о том, какой файл нас интересует ( i )
-  и передавая Nil
-  вместо длины буфера.  Возвращаемое значение
-  равно длине
-  имени файла.
+      Определяем длину имени файла,
+      сообщая DragQueryFile
+      о том, какой файл нас интересует ( i )
+      и передавая Nil
+      вместо длины буфера.  Возвращаемое значение
+      равно длине
+      имени файла.
     }
     nFileLength := DragQueryFile (hDrop, i, Nil, 0) + 1;
     GetMem (pszFileName, nFileLength);
 
     {
-Копируем имя файла ≈  сообщаем
-DragQueryFile о том,
-какой файл нас интересует ( i ) и
-передавая длину буфера.
-ЗАМЕЧАНИЕ: Проследите за тем, чтобы размер
-буфера на 1 байт
-превышал длину имени, чтобы выделить место
-для завершающего
-строку нулевого символа!
+      Копируем имя файла ≈  сообщаем
+      DragQueryFile о том,
+      какой файл нас интересует ( i ) и
+      передавая длину буфера.
+      ЗАМЕЧАНИЕ: Проследите за тем, чтобы размер
+      буфера на 1 байт
+      превышал длину имени, чтобы выделить место
+      для завершающего
+      строку нулевого символа!
     }
     DragQueryFile (hDrop , i, pszFileName, nFileLength);
 
     if PointInComponent(Form2, pPoint)
       then AddFile(1,StrPas(pszFileName));
-    {Label1.Caption:=Label1.Caption + #13#10 +StrPas(pszFileName); }
+    UpdateFileList;
 
 
     { Освобождаем выделенную память... }

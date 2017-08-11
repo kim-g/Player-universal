@@ -845,8 +845,10 @@ procedure TForm1.LoadSPL(FileName: string);
     i:integer;
     Table: TSQLiteTable;
     begin
-    Table := DB.GetTable('SELECT `id`, `number`, `file`, `title` FROM `desk` WHERE `desk_n` = ' + IntToStr(DeskN)
-      + ' ORDER BY `order`');
+    Table := DB.GetTable('SELECT desk.id, desk.number, desk.file, ' +
+      'case when desk.title="" then files.title else desk.title end title ' +
+      'FROM files INNER JOIN desk ON (desk.file = files.id) WHERE desk.desk_n = ' + IntToStr(DeskN)
+      + ' ORDER BY desk.`order`');
 
     StringList := TStringList.Create;
     TitleList := TStringList.Create;
@@ -1189,19 +1191,13 @@ if bsec < 10 then ssec:='0'+IntToStr(bsec) else ssec:=IntToStr(bsec);
 
 Length.Caption:=smin+':'+ssec;
 Capt.Caption:=StringList.Names[ListBoxItemSelected[DeskN]] + ' – ' +
-  TitleList.Values[IntToStr(ListBoxItemSelected[DeskN])];
+  TitleList.Values[StringList.Names[ListBoxItemSelected[DeskN]]];
 Timer.Caption:='00:00';
 
 Desk.mode:=pmstop;
 
 // Загрузка меток
 Desk.LabelList.Clear;
-{i := 1;
-while FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End')<>'End' do
-  begin
-  Desk.LabelList.Add(FTP.ReadString('N'+StringList.Values[StringList.Names[ListBoxItemSelected[DeskN]]],'time'+IntToStr(i),'End'));
-  inc(i);
-  end;  }
 
 if TempFile.Cycle then
   begin
